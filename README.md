@@ -1,4 +1,6 @@
-# Usage
+# Steganography
+
+## Usage
 
 1. 隐写（结果保存到 *output.png*）
 
