@@ -1,5 +1,5 @@
 from django.db import models
-
+from PIL import Image as ImageProces
 
 class User(models.Model):
     user_name = models.CharField('用户名', max_length=30)
@@ -16,17 +16,21 @@ class User(models.Model):
         return '%s' % self.user_name
 
 
-class Wallpaper(models.Model):
+class Image(models.Model):
     user = models.ForeignKey(User, to_field='jaccount', on_delete=models.CASCADE, default='000')
     username = models.CharField(max_length=64, default='visitor')
-    photo = models.ImageField(upload_to='', default="#")
+    photo = models.ImageField(upload_to='', default="#", verbose_name="Image")
     photo_name = models.CharField(max_length=120, default='visitor.jpg')
-    css = models.CharField(max_length=120, default="")
 
     class Meta:
-        db_table = 'Wallpaper'
-        verbose_name = 'Wallpaper'
-        verbose_name_plural = 'Wallpaper'
+        db_table = 'Image'
+        verbose_name = 'Image'
+        verbose_name_plural = 'Image'
 
     def __str__(self):
         return '%s' % self.username
+    
+    def stegan(self):
+        filename = self.photo.path
+        img = ImageProces.open(filename)
+        img.show()

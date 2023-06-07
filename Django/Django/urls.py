@@ -20,12 +20,13 @@ from . import views, settings
 
 urlpatterns = [
     path('', views.index_view),
+    path('index/', include('index.urls')),
     path('admin/', admin.site.urls),
     # path('index/', include('index.urls')),
     path('login/', views.login, name='login'),
     path('logout/', views.logout, name='logout'),
     path('logged_out', views.logged_out, name='logged_out'),
     path('authorize/', views.authorize, name='authorize'),
-    # re_path(r'media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+    re_path(r'media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
     
 ]

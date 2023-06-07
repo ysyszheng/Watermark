@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'Django',
+    'index',
     'rest_framework',
     'corsheaders',
 ]
@@ -126,7 +126,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+# STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 JACCOUNT_CLIENT_ID = 'ZjpxY3dA6fpkp7o4kM0g'
 # JACCOUNT_CLIENT_ID = os.environ.get('JACCOUNT_CLIENT_ID', '')
@@ -137,3 +137,6 @@ JACCOUNT_CLIENT_SECRET = 'CE1FEABAD368510B161F8F0E582CBA6864EAF4137FC18079'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

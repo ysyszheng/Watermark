@@ -8,39 +8,12 @@ from authlib.jose import jwt
 from authlib.oidc.core import CodeIDToken
 from urllib.parse import urlencode
 
-from .models import User, Wallpaper
 import json
 import requests
 
 @csrf_exempt
 def index_view(request):
-    print("jaccount login:")
-    # jaccount_default_flag = User.objects.filter(jaccount='0000')
-    # if not jaccount_default_flag:
-    #     User.objects.create(jaccount='0000')
-    #     user = User.objects.filter(jaccount='0000')[0]
-        # Wallpaper.objects.create(user=user)
-
-    try:
-        result_origin = jac(request)
-        result = result_origin['entities'][0]['name']
-        jaccount = result_origin['entities'][0]['account']
-        # jaccount_flag = User.objects.filter(jaccount=jaccount)
-
-        print(f"Hello {result}!")
-    except:
-        result = ''
-        jaccount = '0000'
-        print(f"Please login!")
-        print("except!")
-    
-    id_info = {
-        'name': result,
-        'account': jaccount,
-    }
-    
-    return HttpResponse(json.dumps(id_info), content_type="application/json")
-
+    return HttpResponseRedirect('/index/')
 
 @csrf_exempt
 def login(request):
@@ -80,11 +53,3 @@ def logged_out(request):
     # redir_uri = request.build_absolute_uri('/index')
     redir_uri = "http://localhost:5173/"
     return HttpResponseRedirect(redir_uri)
-
-@csrf_exempt
-def jac(request):
-    token = request.session['token']
-    access_token = token['access_token']
-    requests.packages.urllib3.disable_warnings()
-    result = requests.get(f'https://api.sjtu.edu.cn/v1/me/profile?access_token={access_token}', verify=False)
-    return result.json()
