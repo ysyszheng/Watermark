@@ -5,5 +5,5 @@ from . import views, axios
 urlpatterns = [
     path('', views.index_view, name='index'), 
     path('stegan/', axios.uploadImage_stegan, name="stegan"),
-    # path('unstegan/', axios.uploadImage_unstegan, name="unstegan"),
+    path('unstegan/', axios.uploadImage_unstegan, name="unstegan"),
 ]

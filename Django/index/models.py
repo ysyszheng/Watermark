@@ -1,5 +1,7 @@
 from django.db import models
-from PIL import Image as ImageProces
+from PIL import Image as ImageProcess
+from .process.stegan import encodeDataInImage, decodeImage
+from .process.watermark import addWatermark
 
 class User(models.Model):
     user_name = models.CharField('用户名', max_length=30)
@@ -19,8 +21,11 @@ class User(models.Model):
 class Image(models.Model):
     user = models.ForeignKey(User, to_field='jaccount', on_delete=models.CASCADE, default='000')
     username = models.CharField(max_length=64, default='visitor')
-    photo = models.ImageField(upload_to='', default="#", verbose_name="Image")
-    photo_name = models.CharField(max_length=120, default='visitor.jpg')
+
+    text = models.CharField(max_length=64, default='')
+    file_time = models.CharField(max_length=120, default='visitor.jpg')
+    photo_input = models.ImageField(upload_to='', default="#", verbose_name="Image")
+    photo_output = models.CharField(max_length=120, default='visitor_.jpg')
 
     class Meta:
         db_table = 'Image'
@@ -30,7 +35,17 @@ class Image(models.Model):
     def __str__(self):
         return '%s' % self.username
     
-    def stegan(self):
-        filename = self.photo.path
-        img = ImageProces.open(filename)
-        img.show()
+    def stegan(self, text):
+        filename = self.photo_input.path
+        img = ImageProcess.open(filename)
+        file = encodeDataInImage(img, text)
+        file.save(f"media/stegan_{self.photo_input.__dict__['name']}")
+        self.photo_output = f"stegan_{self.photo_input.__dict__['name']}"
+        self.save()
+
+    def unstegan(self):
+        filename = self.photo_input.path
+        img = ImageProcess.open(filename)
+        text = decodeImage(img)
+        self.text = text
+        self.save()

@@ -15,7 +15,10 @@
         <button @click="generateImage">生成带有文字的图片</button>
       </div>
       <div class="button-wrapper">
-        <button @click="SubmitImage">提交图片</button>
+        <button @click="SubmitImage">提交图片-隐写</button>
+      </div>
+      <div class="button-wrapper">
+        <button @click="SubmitProcessedImage">提交图片-反隐写</button>
       </div>
     </div>
   </div>
@@ -71,9 +74,42 @@ export default {
             console.log(response.data["key"]);
             if (response.data["key"] == 1) {
               console.log("Stegan成功！");
+              console.log(response.data['stegan_photo'])
             }
             if (response.data["key"] == 0) {
               console.log("Stegan失败！");
+            }
+        })
+        .catch(function (error){
+          console.log(error)
+        });
+
+    },
+    SubmitProcessedImage() {
+      // 上传要反隐写的图片
+      // console.log(this.textInput)
+      // console.log(this.uploadedImageFile)
+      var file = this.uploadedImageFile;
+      var formData = new FormData()
+      console.log("uploadImage_unstegan:")
+
+      var jaccount = sessionStorage.getItem("jaccount");
+
+      formData.append("jaccount", jaccount);
+      formData.append("upload_file", file);
+
+      axios
+        .post("http://localhost:8000/index/unstegan/", formData)
+        .then(function (response)
+        {
+          // 处理返回的图片格式并展示
+            console.log(response.data["key"]);
+            if (response.data["key"] == 1) {
+              console.log("Unstegan成功！");
+              console.log(response.data['unstegan_text'])
+            }
+            if (response.data["key"] == 0) {
+              console.log("Unstegan失败！");
             }
         })
         .catch(function (error){

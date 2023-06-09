@@ -22,10 +22,7 @@ import Header from './components/Header.vue';
 // import { getid } from "./api/api.js";
 import {ref, onMounted, watch } from "vue";
 import axios from "axios";
-
 import axiosInstance from './api/index.js'
-
-
 export default {
   name: "App",
   setup(){
@@ -43,6 +40,7 @@ export default {
         console.log(response.data["name"])
         sessionStorage.setItem("name", response.data["name"]);
         sessionStorage.setItem("jaccount", response.data["account"]);
+
       })
 
     onMounted(() => {
