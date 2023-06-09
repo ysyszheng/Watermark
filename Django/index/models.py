@@ -22,6 +22,8 @@ class Image(models.Model):
     user = models.ForeignKey(User, to_field='jaccount', on_delete=models.CASCADE, default='000')
     username = models.CharField(max_length=64, default='visitor')
 
+    type = models.CharField(max_length=64,default='none')
+
     text = models.CharField(max_length=64, default='')
     file_time = models.CharField(max_length=120, default='visitor.jpg')
     photo_input = models.ImageField(upload_to='', default="#", verbose_name="Image")
@@ -41,6 +43,7 @@ class Image(models.Model):
         file = encodeDataInImage(img, text)
         file.save(f"media/stegan_{self.photo_input.__dict__['name']}")
         self.photo_output = f"stegan_{self.photo_input.__dict__['name']}"
+        self.type = "stegan"
         self.save()
 
     def unstegan(self):
@@ -48,4 +51,5 @@ class Image(models.Model):
         img = ImageProcess.open(filename)
         text = decodeImage(img)
         self.text = text
+        self.type = "unstegan"
         self.save()

@@ -33,14 +33,16 @@ def index_view(request):
         
         user = User.objects.filter(jaccount=jaccount)[0]
         
-        images = Image.objects.filter(user=user)
+        images = Image.objects.filter(user=user, type="stegan")
         image_set = []
 
         for image in images:
-            tmp = {"id", image.id, 'username', result}
+            tmp = {"id": image.id, 'username': result}
             try:
-                tmp['photo_name'] = image.photo_name
-                tmp['photo_file'] = image.photo
+                tmp['text'] = image.text
+                tmp['photo_clean'] = image.photo_input.__dict__['name']
+                tmp['photo_processed'] = image.photo_output
+                tmp['file_time'] = image.file_time
             except:
                 continue
             image_set.append(tmp)
@@ -59,7 +61,7 @@ def index_view(request):
         'account': jaccount,
         'image_set': image_set,
     }
-
+    print(image_set)
     return HttpResponse(json.dumps(id_info), content_type="application/json")
 
 

@@ -38,6 +38,8 @@ export default {
       .then((response) => {
         console.log("Hello ")
         console.log(response.data["name"])
+        console.log(response.data["image_set"])
+
         sessionStorage.setItem("name", response.data["name"]);
         sessionStorage.setItem("jaccount", response.data["account"]);
 
