@@ -1,0 +1,27 @@
+<template>
+  <div>
+    <img v-for="(imageUrl, index) in imageUrls" :key="index" :src="imageUrl" :alt="'image-' + index" class="image" />
+    <h1>时间：2023.02.02 16:00:00</h1>
+  </div>
+</template>
+
+<script>
+const imageContext = require.context('@/picture', false, /\.(png|jpe?g|gif|svg)$/)
+
+export default {
+  data() {
+    const imageUrls = imageContext.keys().map(key => imageContext(key))
+    return {
+      imageUrls
+    }
+  }
+}
+</script>
+
+<style>
+.image {
+  max-width: 100%;
+  max-height: 200px;
+  margin-bottom: 10px;
+}
+</style>
