@@ -10,7 +10,8 @@ import Header from './components/Header.vue';
         <RouterLink to="/history" class="nav-link">历史记录</RouterLink>
         <RouterLink to="/steganography" class="nav-link">数据隐写</RouterLink>
         <RouterLink to="/watermark" class="nav-link">图片水印</RouterLink>
-        <RouterLink to="/profile" class="nav-link">个人信息</RouterLink>
+        <RouterLink v-if="!isLogged" to="/login" class="nav-link">账号登录</RouterLink>
+        <RouterLink v-if="isLogged" to="/profile" class="nav-link">账号登出</RouterLink>
       </div>
     </nav>
   </div>
@@ -51,9 +52,34 @@ export default {
 
     return{
       getid,
+
     };
-  }
+
+  },
+
+data() {
+    return {
+      isLogged: false
+    }
+  },
+
+
+methods: {
+    login(){
+      // Login logic here
+      this.isLogged = true;
+    },
+    logout(){
+      // Logout logic here
+      this.isLogged = false;
+      }
+    }
 }
+
+
+
+
+
 
 </script>
 
