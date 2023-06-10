@@ -1,7 +1,7 @@
 
 <template>
 
-  <li><a href="http://localhost:8000/logout/"> 从jaccount登录 </a></li>
+  <li><a href="http://localhost:8000/login/"> 从jaccount登录 </a></li>
 </template>
 
 
