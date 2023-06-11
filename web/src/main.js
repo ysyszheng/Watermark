@@ -6,7 +6,7 @@ import router from './router'
 import {
   Button, Input, Layout, Menu, 
   Breadcrumb, Divider, Image, Grid, 
-  Row, Col, Typography
+  Row, Col, Typography, Upload
 } from 'ant-design-vue';
 // import Antd from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.css';
@@ -27,5 +27,6 @@ app.use(Grid)
 app.use(Row)
 app.use(Col)
 app.use(Typography)
+app.use(Upload)
 
 app.mount('#app')

@@ -18,14 +18,24 @@ const router = createRouter({
       component: () => import('../views/HistoryView.vue')
     },
     {
-      path: '/watermark',
-      name: 'watermark',
-      component: () => import('../views/WatermarkView.vue')
+      path: '/addwm',
+      name: 'addwatermark',
+      component: () => import('../views/AddWatermarkView.vue')
     },
     {
-      path: '/steganography',
-      name: 'steganography',
-      component: () => import('../views/SteganographyView.vue')
+      path: '/rmwm',
+      name: 'rmwatermark',
+      component: () => import('../views/RmWatermarkView.vue')
+    },
+    {
+      path: '/addsg',
+      name: 'addsteganography',
+      component: () => import('../views/AddSteganographyView.vue')
+    },
+    {
+      path: '/rmsg',
+      name: 'rmsteganography',
+      component: () => import('../views/RmSteganographyView.vue')
     },
     {
       path: '/:pathMatch(.*)*',

@@ -15,21 +15,29 @@
           <template #title>
             <span>
               <file-protect-outlined />
-              <span></span><RouterLink to="/steganography">数据隐写</RouterLink>
+              <span>数据隐写</span>
             </span>
           </template>
-          <a-menu-item key="2">图片隐写</a-menu-item>
-          <a-menu-item key="3">隐写提取</a-menu-item>
+          <a-menu-item key="2">
+            <RouterLink to="/addsg">图片隐写</RouterLink>
+          </a-menu-item>
+          <a-menu-item key="3">
+            <RouterLink to="/rmsg">隐写提取</RouterLink>
+          </a-menu-item>
         </a-sub-menu>
         <a-sub-menu key="sub2" v-if="isLogged">
           <template #title>
             <span>
               <file-image-outlined />
-              <span></span><RouterLink to="/watermark">图片水印</RouterLink>
+              <span>图片水印</span>
             </span>
           </template>
-          <a-menu-item key="4">添加水印</a-menu-item>
-          <a-menu-item key="5">去除水印</a-menu-item>
+          <a-menu-item key="4">
+            <RouterLink to="/addwm">添加水印</RouterLink>
+          </a-menu-item>
+          <a-menu-item key="5">
+            <RouterLink to="/rmwm">去除水印</RouterLink>
+          </a-menu-item>
         </a-sub-menu>
         <a-menu-item key="6">
           <user-outlined />
