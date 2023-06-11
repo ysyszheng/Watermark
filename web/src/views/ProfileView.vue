@@ -1,7 +1,4 @@
 <template>
-
-
-
   <div>
     <p :class="{ 'link': popupVisible1 }" @click="showPopup1">
       <a href="javascript:void(0)">登出</a>
@@ -9,12 +6,10 @@
     <div v-if="popupVisible1" class="popup">
       <p>确定需要登出吗？</p>
 
-<!--      <a href='http://localhost:8000/login/'>从jaccount登录</a>-->
       <button @click="LOGOUT">确定</button>
       <button @click="hidePopup1">取消</button>
     </div>
   </div>
-
 </template>
 
 <script>

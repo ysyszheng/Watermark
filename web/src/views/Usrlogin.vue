@@ -1,27 +1,21 @@
 <template>
-
-
-
   <div>
     <p :class="{ 'link': popupVisible1 }" @click="showPopup1">
       <a href="javascript:void(0)">登录</a>
     </p>
     <div v-if="popupVisible1" class="popup">
-
-<!--      <a href='http://localhost:8000/login/'>从jaccount登录</a>-->
       <button @click="LOGIN">通过jaccount登录</button>
       <button @click="hidePopup1">取消</button>
     </div>
   </div>
-
 </template>
 
 <script>
-import {ref, onMounted, watch, inject } from "vue";
+import { ref, onMounted, watch, inject } from "vue";
 export default {
   setup() {
     const url = inject('$url');
-    return{
+    return {
       url
     }
   },
@@ -32,37 +26,20 @@ export default {
     }
   },
   methods: {
-    /*login(){
-      this.$root.$isLogged = true;
-      this.isLogged = true;
-      this.popupVisible1 = false
-    },*/
-
     showPopup1() {
       this.popupVisible1 = true
     },
     hidePopup1() {
       this.popupVisible1 = false
     },
-    LOGIN(){
+    LOGIN() {
       window.location.href = this.url + '/login/';
     }
-
-
   }
 }
 </script>
 
-
 <style>
-@media (min-width: 1024px) {
-  .about {
-    min-height: 20vh;
-    display: flex;
-    align-items: center;
-  }
-}
-
 .popup {
   position: fixed;
   top: 50%;

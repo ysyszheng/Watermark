@@ -33,7 +33,7 @@
         </a-sub-menu>
         <a-menu-item key="6">
           <user-outlined />
-          <span></span><RouterLink to="/login">账号登录</RouterLink>
+          <span></span><RouterLink to="/">个人信息</RouterLink>
         </a-menu-item>
       </a-menu>
     </a-layout-sider>
