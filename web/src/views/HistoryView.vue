@@ -1,52 +1,71 @@
 <template>
   <div>
-    <img :src="imageUrl1" alt="test.png" class="image"/>
-    <h1>{{ fileName1 }}</h1>
-    <h1>时间：{{ formattedTime }}</h1>
-    <img :src="imageUrl2" alt="lucky.png" class="image"/>
-    <h1>时间：{{ formattedTime }}</h1>
+    <div v-for="image in imageSet" :key="image.id" class="image-item">
+      <div class="image-info">
+        <p>时间戳: {{ image.file_time }}</p>
+        <p>文字信息: {{ image.text }}</p>
+      </div>
+      <div class="image-container">
+        <div class="image-box">
+          <img :src="getImageUrl(image.photo_clean)" alt="原图">
+          <p>原图</p>
+        </div>
+        <div class="image-box">
+          <img :src="getImageUrl(image.photo_processed)" alt="修改后的图">
+          <p>修改后的图</p>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
-
-
 <script>
+import axios from 'axios'
+
 export default {
-  /*data() {
-    return {
-      imageUrl1: 'src/picture/test.png' ,// 图片的本地地址
-      imageUrl2: 'src/picture/20230609215900.png'
-    }
-  },*/
   data() {
     return {
-      imageUrl2: 'src/picture/20230609220001.png',// 图片的本地地址
-      imageUrl1: 'src/picture/20230609215900.png',
-      fileName1: '20230609215900.png'
+      imageSet: [] // 存储历史图片记录
     }
   },
-  computed: {
-    formattedTime() {
-      // 将14位数字转换为时间格式
-      const year = this.fileName1.substring(0, 4)
-      const month = this.fileName1.substring(4, 6)
-      const day = this.fileName1.substring(6, 8)
-      const hour = this.fileName1.substring(8, 10)
-      const minute = this.fileName1.substring(10, 12)
-      const second = this.fileName1.substring(12, 14)
-      const time = `${year}.${month}.${day} ${hour}:${minute}:${second}`
-      return time
+  mounted() {
+    // 在页面加载时获取历史图片记录
+    this.getHistoricalImages()
+  },
+  methods: {
+    getHistoricalImages() {
+      // 从sessionStorage中获取图片记录
+      const imageSet = sessionStorage.getItem("image_set")
+      if (imageSet) {
+        this.imageSet = JSON.parse(imageSet)
+      }
+      console.log("imageSet: ")
+      console.log(imageSet)
+    },
+    getImageUrl(filename) {
+      // 生成图片的URL
+      return "http://localhost:8000/media/" + filename
     }
   }
 }
 </script>
 
-
-
 <style>
-.image {
-  max-width: 100%;
-  max-height: 200px;
-  margin-bottom: 10px;
+.image-item {
+  margin-bottom: 20px;
+}
+
+.image-container {
+  display: flex;
+  align-items: center;
+}
+
+.image-box {
+  margin-right: 20px;
+}
+
+.image-box img {
+  max-width: 400px;
+  max-height: 400px;
 }
 </style>

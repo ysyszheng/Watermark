@@ -62,6 +62,10 @@ export default {
       // console.log(this.uploadedImageFile)
 
       var text = this.textInput;
+      if (text == '') {
+        alert("请输入要隐写的文字！");
+        return;
+      }
       var file = this.uploadedImageFile;
       var formData = new FormData()
       console.log("uploadImage_stegan:")

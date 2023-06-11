@@ -43,7 +43,9 @@ export default {
 
         sessionStorage.setItem("name", response.data["name"]);
         sessionStorage.setItem("jaccount", response.data["account"]);
-
+        
+        const jsonStr = JSON.stringify(response.data["image_set"]);
+        sessionStorage.setItem("image_set", jsonStr);
       })
 
     onMounted(() => {
@@ -75,12 +77,6 @@ methods: {
       }
     }
 }
-
-
-
-
-
-
 </script>
 
 <style scoped>
