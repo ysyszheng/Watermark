@@ -5,7 +5,7 @@ import argparse
 def addWatermark(image_path, text):
     image = Image.open(image_path)
     draw = ImageDraw.Draw(image)
-    draw.text((50, 50), text, font=font)
+    draw.text((50, 50), text)
 
     image.save("output.png")
 
