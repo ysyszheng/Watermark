@@ -46,8 +46,19 @@ export default {
 
           sessionStorage.setItem("name", response.data["name"]);
           sessionStorage.setItem("jaccount", response.data["account"]);
+          const jsonStr = JSON.stringify(response.data["image_set"]);
+          sessionStorage.setItem("image_set", jsonStr);
 
         })
+
+
+
+
+
+
+
+
+
     const isLogged = ref(false)
     const username = ref(null)
 
@@ -58,11 +69,7 @@ export default {
     }
 
 
-        // sessionStorage.setItem("name", response.data["name"]);
-        // sessionStorage.setItem("jaccount", response.data["account"]);
-        //
-        // const jsonStr = JSON.stringify(response.data["image_set"]);
-        // sessionStorage.setItem("image_set", jsonStr);
+
       return {
       getid,
       username,
@@ -71,14 +78,9 @@ export default {
     }
 
 
-
-
-        },
-
-
-    // onMounted(() => {
-    //   getid();
-    // });
+onMounted(() => {
+      getid();
+    });
 
 
 
@@ -87,6 +89,13 @@ export default {
 
 
 
+
+
+
+
+
+
+    },
 
 
   // data() {
