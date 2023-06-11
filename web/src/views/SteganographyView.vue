@@ -11,9 +11,6 @@
       <div class="input-wrapper">
         <input type="text" v-model="textInput" placeholder="请输入文字">
       </div>
-      <!-- <div class="button-wrapper">
-        <button @click="generateImage">生成带有文字的图片</button>
-      </div> -->
       <div class="button-wrapper">
         <button @click="SubmitImage">提交图片-隐写</button>
       </div>
@@ -25,6 +22,9 @@
         <button @click="DownloadImage">下载隐写后的图片</button>
       </div>
     </div>
+  </div>
+  <div v-if="showSteganImg">
+    <img :src="steganImg" alt="steganImg" class="image"/>
   </div>
 </template>
 
@@ -38,7 +38,9 @@ export default {
       uploadedImageFile: null,
       textInput: '',
       showUnsteganText: false, // 控制是否显示反隐写文字内容
-      unsteganText: '' // 反隐写的文字内容
+      unsteganText: '', // 反隐写的文字内容
+      showSteganImg: false, // 控制是否显示隐写后的图片
+      steganImg: '', // 隐写后的图片
     };
   },
   methods: {
@@ -53,9 +55,6 @@ export default {
     openFileUpload() {
       this.$refs.fileInput.click();
     },
-    // generateImage() {
-    //   // 生成带有文字的图片的逻辑
-    // },
     SubmitImage() {
       // 上传图片及要隐写的文字
       // console.log(this.textInput)
@@ -94,7 +93,9 @@ export default {
         .catch(function (error){
           console.log(error)
         });
-
+      
+      this.showSteganImg = true;
+      this.steganImg = "http://localhost:8000/media/" + sessionStorage.getItem("stegan_photo");
     },
     SubmitProcessedImage() {
       // 上传要反隐写的图片
