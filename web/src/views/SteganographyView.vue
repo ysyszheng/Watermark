@@ -9,7 +9,9 @@
     </div>
     <div class="input-section">
       <div class="input-wrapper">
-        <input type="text" v-model="textInput" placeholder="请输入文字">
+        <!-- <input type="text" v-model="textInput" placeholder="请输入文字"> -->
+        <!-- <a-input v-model:value="textInput" placeholder="Basic usage" /> -->
+        <a-textarea v-model:value="textInput" show-count :maxlength="100" placeholder="请输入文字" />
       </div>
       <div class="button-wrapper">
         <button @click="SubmitImage">提交图片-隐写</button>
@@ -30,13 +32,20 @@
 
 <script>
 import axios from 'axios';
+import { defineComponent, ref } from 'vue';
 
-export default {
+export default defineComponent ({
+  setup() {
+    const textInput = ref('');
+    return {
+      textInput,
+    };
+  },
   data() {
     return {
       uploadedImageURL: null,
       uploadedImageFile: null,
-      textInput: '',
+      // textInput: '',
       showUnsteganText: false, // 控制是否显示反隐写文字内容
       unsteganText: '', // 反隐写的文字内容
       showSteganImg: false, // 控制是否显示隐写后的图片
@@ -158,7 +167,7 @@ export default {
         });
     }
   }
-};
+});
 </script>
 
 <style>
