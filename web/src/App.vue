@@ -5,7 +5,8 @@
       <div class="logo">
         <span>版权隐私保护平台</span>
       </div>
-      <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline">
+      <!-- <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline"> -->
+      <a-menu theme="dark" mode="inline">
         <a-menu-item key="1" v-if="isLogged">
           <history-outlined />
           <span></span><RouterLink to="/history">历史记录</RouterLink>
