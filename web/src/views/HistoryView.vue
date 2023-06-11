@@ -1,27 +1,31 @@
 <template>
   <div>
-    <div v-for="image in imageSet" :key="image.id" class="image-item">
-      <div class="image-info">
-        <p>时间戳: {{ image.file_time }}</p>
-        <p>文字信息: {{ image.text }}</p>
+    <div v-for="image in imageSet" :key="image.id">
+      <div>
+        <a-divider>{{ image.file_time }}</a-divider>
+        <a-typography-paragraph>
+          <blockquote style="font-size: 18px;">版权文字信息: 
+            <a-typography-text strong>{{ image.text }}</a-typography-text>
+          </blockquote>
+        </a-typography-paragraph>
       </div>
-      <div class="image-container">
-        <div class="image-box">
-          <img :src="getImageUrl(image.photo_clean)" alt="原图">
-          <p>原图</p>
-        </div>
-        <div class="image-box">
-          <img :src="getImageUrl(image.photo_processed)" alt="修改后的图">
-          <p>修改后的图</p>
-        </div>
-      </div>
+      <a-row>
+        <a-col :span="12">
+          <div class="image-container">
+            <a-image :src="getImageUrl(image.photo_clean)" alt="原图" />
+          </div>
+        </a-col>
+        <a-col :span="12">
+          <div class="image-container">
+            <a-image :src="getImageUrl(image.photo_processed)" alt="修改后的图" />
+          </div>
+        </a-col>
+      </a-row>
     </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
-
 export default {
   data() {
     return {
@@ -51,21 +55,17 @@ export default {
 </script>
 
 <style>
-.image-item {
-  margin-bottom: 20px;
-}
-
 .image-container {
   display: flex;
   align-items: center;
+  justify-content: center;
+  width: 80%; /* 设置容器宽度为上级容器宽度的 80% */
+  max-width: 100%; /* 限制容器最大宽度为上级容器宽度的 80% */
 }
 
-.image-box {
-  margin-right: 20px;
-}
-
-.image-box img {
-  max-width: 400px;
-  max-height: 400px;
+.image-container a-image {
+  width: 100%; /* 设置图片宽度为容器宽度的 100% */
+  height: auto; /* 自动计算图片高度，保持宽高比 */
+  object-fit: contain; /* 控制图片按比例缩放并完整显示在容器内 */
 }
 </style>

@@ -9,6 +9,7 @@
     "test:unit": "vitest"
   },
   "dependencies": {
+    "@ant-design/icons-vue": "^6.1.0",
     "ant-design-vue": "^3.2.20",
     "axios": "^1.4.0",
     "vue": "^3.3.2",
