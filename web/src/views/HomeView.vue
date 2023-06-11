@@ -1,100 +1,74 @@
 <template>
-  <div class="about">
-    <h1>This is an home page.  </h1>
+  <div v-if="!isLogged" class="jaccount" @click="login">
+    <br />
+    <p>通过jAccount登录</p>
+    <img src="https://i.sjtu.edu.cn/css/assets/images/jaccount.png" alt="jAccount"/>
+    <br />
   </div>
-  <div class="about">
-    <h1>Hello {{username}}!</h1>
+  <div v-else class="jaccount" @click="logout">
+    <br />
+    <p>从jAccount登出</p>
+    <img src="https://i.sjtu.edu.cn/css/assets/images/jaccount.png" alt="jAccount"/>
+    <br />
   </div>
-
-<!--  <div v-if="islogin">-->
-<!--    <p :class="{ 'link': popupVisible2 }" @click="showPopup2">-->
-<!--      <a href="javascript:void(0)">登出</a>-->
-<!--    </p>-->
-<!--    <div v-if="popupVisible2" class="popup">-->
-<!--      <p>确定需要登出吗？</p>-->
-<!--      <button @click="LOGOUT">确定</button>-->
-<!--      <button @click="hidePopup2">关闭</button>-->
-<!--    </div>-->
-<!--  </div>-->
-
-
 </template>
 
 <script>
-import axios from 'axios';
-import {ref, onMounted, watch, inject } from "vue";
+import { ref, inject } from "vue";
 export default {
   name: 'homepage',
-  setup()
-  {
-    const islogin = ref(false)
+  setup() {
+    const isLogged = ref(false)
     const username = ref(null)
-    const url = inject("url");
-    if (sessionStorage.getItem("jaccount") == "0000" | sessionStorage.getItem("jaccount") == null) islogin.value = false
+    const url = inject("$url");
+    console.log("url: " + url)
+    if (sessionStorage.getItem("jaccount") == "0000" | sessionStorage.getItem("jaccount") == null) isLogged.value = false
     else {
-      islogin.value = true
+      isLogged.value = true
       username.value = sessionStorage.getItem("name")
     }
-
     return{
       username,
-      islogin,
+      isLogged,
       url,
     }
   },
-
-  watch: {
-    username(to, from) {
-      console.log("change:")
-      console.log(to)
-      location.reload()
-    }
-},
-
-data() {
-  return {
-    popupVisible2: false,
-    timer: null, // 定时器
-    intervalTime: 1000 * 60 * 10 // 定时器间隔时间，这里设置为10分钟
-  }
-},
-
-methods:{
-    showPopup2() {
-      this.popupVisible2 = true
+  methods:{
+    login() {
+      window.location.href = this.url + '/login/';
     },
-
-    hidePopup2() {
-      this.popupVisible2 = false
-    },
-
-  LOGOUT(){
+    logout(){
       window.location.href = this.url + '/logout/';
     }
-},
-
-
-
+  },
 }
 </script>
 
 <style>
-@media (min-width: 1024px) {
-  .about {
-    min-height: 20vh;
-    display: flex;
-    align-items: center;
-  }
+.jaccount {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 320px;
+  height: 112px;
+  cursor: pointer;
 }
 
-.popup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: white;
-  padding: 20px;
-  border: 1px solid black;
+.jaccount p {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  color: #c2c2c2;
+}
+
+.jaccount img {
+  max-width: 100%;
+  height: auto;
+}
+
+.jaccount:hover {
+  background-color: #f6f6f6;
 }
 </style>
 
