@@ -1,5 +1,6 @@
-from PIL import Image, ImageDraw, ImageFont
 import argparse
+
+from PIL import Image, ImageDraw, ImageFont
 
 
 def addWatermark(image_path, text):
