@@ -6,18 +6,18 @@
       <a href="javascript:void(0)">登录</a>
     </p>
     <div v-if="popupVisible1" class="popup">
-      <a href='http://localhost:5173/history'>从jaccount登录</a>
+      <a href='http://localhost:8000/login'>从jaccount登录</a>
       <button @click="hidePopup1">取消</button>
     </div>
   </div>
 
-  <div>
+  <div v-if="isLogin === true">
     <p :class="{ 'link': popupVisible2 }" @click="showPopup2">
       <a href="javascript:void(0)">登出</a>
     </p>
     <div v-if="popupVisible2" class="popup">
       <p>确定需要登出吗？</p>
-      <button @click="LOGOUT">确认</button>
+<!--      <button @click="LOGOUT">确认</button>-->
       <button @click="hidePopup2">关闭</button>
     </div>
   </div>
@@ -27,27 +27,41 @@
 export default {
   data() {
     return {
+      isLogin:false,
+      popupVisible1: false,
       popupVisible2: false,
-      popupVisible1: false
+      user: {
+        id: '',
+        name: ''
+      }
     }
   },
   methods: {
-    showPopup2() {
-      this.popupVisible2 = true
-    },
     showPopup1() {
       this.popupVisible1 = true
     },
-    hidePopup1() {
-      this.popupVisible1 = false
-    },
-    hidePopup2() {
-      this.popupVisible2 = false
+      showPopup2() {
+        this.popupVisible2 = true
+      },
+      hidePopup1() {
+        this.popupVisible1 = false
+      },
+      hidePopup2() {
+        this.popupVisible2 = false
+      },
+    mounted() {
+      axios.get('/api/user').then(response => {this.user = response.data})
     },
     LOGOUT(){
-      // 执行注销操作
-      // 例如：发送请求到后端，清除用户信息等
-      // 然后跳转到登录页面
+      /*axios.post('/api/logout').then(response => {
+      // 清除用户信息
+      this.user = {
+        id: '',
+        name: ''
+          }
+      })*/
+
+      this.isLogged = true;
       window.location.href = '/login';
     }
   }
