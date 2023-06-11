@@ -57,29 +57,32 @@ export default {
       username.value = sessionStorage.getItem("name")
     }
 
-<<<<<<< Updated upstream
-        sessionStorage.setItem("name", response.data["name"]);
-        sessionStorage.setItem("jaccount", response.data["account"]);
-        
-        const jsonStr = JSON.stringify(response.data["image_set"]);
-        sessionStorage.setItem("image_set", jsonStr);
-      })
-=======
 
->>>>>>> Stashed changes
-
-    onMounted(() => {
-      getid();
-    });
-
-    return {
+        // sessionStorage.setItem("name", response.data["name"]);
+        // sessionStorage.setItem("jaccount", response.data["account"]);
+        //
+        // const jsonStr = JSON.stringify(response.data["image_set"]);
+        // sessionStorage.setItem("image_set", jsonStr);
+      return {
       getid,
       username,
       isLogged,
 
-    };
+    }
 
-  },
+
+
+
+        },
+
+
+    // onMounted(() => {
+    //   getid();
+    // });
+
+
+
+
 
 
 
@@ -94,14 +97,12 @@ export default {
 
 
 }
-<<<<<<< Updated upstream
-=======
 
 
 
 
 
->>>>>>> Stashed changes
+
 </script>
 
 <style scoped>
