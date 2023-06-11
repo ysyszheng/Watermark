@@ -53,3 +53,12 @@ class Image(models.Model):
         self.text = text
         self.type = "unstegan"
         self.save()
+
+    def watermark(self, text):
+        filename = self.photo_input.path
+        img = ImageProcess.open(filename)
+        file = addWatermark(img, text)
+        file.save(f"media/watermark_{self.photo_input.__dict__['name']}")
+        self.photo_output = f"watermark_{self.photo_input.__dict__['name']}"
+        self.type = "watermark"
+        self.save()

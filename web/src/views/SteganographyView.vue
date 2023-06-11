@@ -92,6 +92,7 @@ export default defineComponent ({
       console.log("uploadImage_stegan:")
 
       var jaccount = sessionStorage.getItem("jaccount");
+      var that = this;
 
       formData.append("jaccount", jaccount);
       formData.append("upload_file", file);
@@ -106,7 +107,9 @@ export default defineComponent ({
             if (response.data["key"] == 1) {
               console.log("Stegan成功！");
               console.log(response.data['stegan_photo'])
-              sessionStorage.setItem("stegan_photo", response.data['stegan_photo']);
+              // sessionStorage.setItem("stegan_photo", response.data['stegan_photo']);
+              that.showSteganImg = true;
+              that.steganImg = "http://localhost:8000/media/" + response.data['stegan_photo'];
             }
             if (response.data["key"] == 0) {
               console.log("Stegan失败！");
@@ -115,9 +118,7 @@ export default defineComponent ({
         .catch(function (error){
           console.log(error)
         });
-      
-      this.showSteganImg = true;
-      this.steganImg = "http://localhost:8000/media/" + sessionStorage.getItem("stegan_photo");
+
     },
     SubmitProcessedImage() {
       // 上传要反隐写的图片

@@ -1,5 +1,6 @@
 from PIL import Image
 import argparse
+import numpy as np
 
 
 def makeImageEven(image):
@@ -15,20 +16,45 @@ def constLenBin(int):
     return binary
  
 
+# def encodeDataInImage(image, data):
+#     evenImage = makeImageEven(image)    
+#     binary = ''.join(map(constLenBin, bytearray(data, 'utf-8')))  
+#     if len(binary) > len(image.getdata()) * 4:
+#         raise Exception('no more than'+ len(evenImage.getdata())*4)
+#     encodedPixels = [(r+int(binary[index*4+0]),g+int(binary[index*4+1]),\
+#                       b+int(binary[index*4+2]),t+int(binary[index*4+3])) \
+#                      if index*4<len(binary) else(r,g,b,t) for index,(r,g,b,t) \
+#                      in enumerate(list(evenImage.getdata()))]
+#     encodedImage = Image.new(evenImage.mode, evenImage.size)  
+#     encodedImage.putdata(encodedPixels)   
+#     # encodedImage.save('output.png')
+#     return encodedImage
+
 def encodeDataInImage(image, data):
-    evenImage = makeImageEven(image)    
-    binary = ''.join(map(constLenBin, bytearray(data, 'utf-8')))  
+    if np.array(image).shape[2] != 4:
+        try:
+            image = image.convert("RGBA")
+        except:
+            print("ERROR image format")
+            return
+    evenImage = makeImageEven(image)
+    binary = "".join(map(constLenBin, bytearray(data, "utf-8")))
     if len(binary) > len(image.getdata()) * 4:
-        raise Exception('no more than'+ len(evenImage.getdata())*4)
-    encodedPixels = [(r+int(binary[index*4+0]),g+int(binary[index*4+1]),\
-                      b+int(binary[index*4+2]),t+int(binary[index*4+3])) \
-                     if index*4<len(binary) else(r,g,b,t) for index,(r,g,b,t) \
-                     in enumerate(list(evenImage.getdata()))]
-    encodedImage = Image.new(evenImage.mode, evenImage.size)  
-    encodedImage.putdata(encodedPixels)   
-    # encodedImage.save('output.png')
+        raise Exception("no more than" + len(evenImage.getdata()) * 4)
+    encodedPixels = [
+        (
+            r + int(binary[index * 4 + 0]),
+            g + int(binary[index * 4 + 1]),
+            b + int(binary[index * 4 + 2]),
+            t + int(binary[index * 4 + 3]),
+        )
+        if index * 4 < len(binary)
+        else (r, g, b, t)
+        for index, (r, g, b, t) in enumerate(list(evenImage.getdata()))
+    ]
+    encodedImage = Image.new(evenImage.mode, evenImage.size)
+    encodedImage.putdata(encodedPixels)
     return encodedImage
- 
 
 def binaryToString(binary):
     index = 0

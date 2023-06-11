@@ -12,14 +12,14 @@
         <input type="text" v-model="textInput" placeholder="请输入文字">
       </div>
       <div class="button-wrapper">
-        <button @click="SubmitImage">提交图片-隐写</button>
+        <button @click="SubmitImage">提交图片-水印</button>
       </div>
       <div class="button-wrapper">
-        <button @click="SubmitProcessedImage">提交图片-反隐写</button>
+        <button @click="SubmitProcessedImage">提交图片-去水印</button>
         <div v-if="showUnsteganText">{{ unsteganText }}</div>
       </div>
       <div class="button-wrapper">
-        <button @click="DownloadImage">下载隐写后的图片</button>
+        <button @click="DownloadImage">下载加水印后的图片</button>
       </div>
     </div>
   </div>
@@ -37,10 +37,10 @@ export default {
       uploadedImageURL: null,
       uploadedImageFile: null,
       textInput: '',
-      showUnsteganText: false, // 控制是否显示反隐写文字内容
-      unsteganText: '', // 反隐写的文字内容
-      showSteganImg: false, // 控制是否显示隐写后的图片
-      steganImg: '', // 隐写后的图片
+      showUnsteganText: false, // 控制是否显示去水印内容
+      unsteganText: '', // 水印的文字内容
+      showSteganImg: false, // 控制是否显示加水印的图片
+      steganImg: '', // 加水印后的图片
     };
   },
   methods: {
@@ -56,7 +56,7 @@ export default {
       this.$refs.fileInput.click();
     },
     SubmitImage() {
-      // 上传图片及要隐写的文字
+      // 上传图片及要加水印的文字
       // console.log(this.textInput)
       // console.log(this.uploadedImageFile)
 
@@ -67,43 +67,43 @@ export default {
       }
       var file = this.uploadedImageFile;
       var formData = new FormData()
-      console.log("uploadImage_stegan:")
+      console.log("uploadImage_watermark:")
 
       var jaccount = sessionStorage.getItem("jaccount");
-
+      var that = this;
       formData.append("jaccount", jaccount);
       formData.append("upload_file", file);
       formData.append("text", text);
 
       axios
-        .post("http://localhost:8000/index/stegan/", formData)
+        .post("http://localhost:8000/index/watermark/", formData)
         .then(function (response)
         {
           // 处理返回的图片格式并展示
             console.log(response.data["key"]);
             if (response.data["key"] == 1) {
-              console.log("Stegan成功！");
-              console.log(response.data['stegan_photo'])
-              sessionStorage.setItem("stegan_photo", response.data['stegan_photo']);
+              console.log("Watermark成功！");
+              console.log(response.data['watermark_photo'])
+              that.showSteganImg = true;
+              that.steganImg = "http://localhost:8000/media/" + response.data['watermark_photo'];
             }
             if (response.data["key"] == 0) {
-              console.log("Stegan失败！");
+              console.log("Watermark失败！");
             }
         })
         .catch(function (error){
           console.log(error)
         });
       
-      this.showSteganImg = true;
-      this.steganImg = "http://localhost:8000/media/" + sessionStorage.getItem("stegan_photo");
+
     },
     SubmitProcessedImage() {
-      // 上传要反隐写的图片
+      // 上传要去水印的图片
       // console.log(this.textInput)
       // console.log(this.uploadedImageFile)
       var file = this.uploadedImageFile;
       var formData = new FormData()
-      console.log("uploadImage_unstegan:")
+      console.log("uploadImage_watermark:")
 
       var jaccount = sessionStorage.getItem("jaccount");
 
