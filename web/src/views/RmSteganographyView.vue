@@ -1,20 +1,26 @@
 <template>
-    <div class="upload-container">
-        <div class="upload-box">
+    <a-row>
+        <a-col :span="8">
+        <div class="upload-box" @click="openFileUpload">
             <input type="file" accept="image/*" ref="fileInput" style="display: none;" id="upload_img"
-                @change="handleFileUpload">
-            <div class="upload-button" @click="openFileUpload">
-                <span v-if="!uploadedImageURL">点击上传图片</span>
-                <img :src="uploadedImageURL" v-else>
+            @change="handleFileUpload">
+            <div class="upload-container">
+            <span v-if="!uploadedImageURL">
+                <div class="upload-text">点击上传图片</div>
+            </span>
+            <img :src="uploadedImageURL" v-else>
             </div>
         </div>
-        <div class="input-section">
-            <div class="button-wrapper">
-                <a-button @click="SubmitProcessedImage" type="primary" shape="round" :size="size">提取隐写内容</a-button>
-                <div v-if="showUnsteganText">{{ unsteganText }}</div>
-            </div>
-        </div>
-    </div>
+        </a-col>
+        <a-col :span="8">
+            <a-button @click="SubmitProcessedImage" type="primary" style="margin-bottom: 8px;">提取隐藏版权文字内容</a-button>
+            <a-typography-paragraph v-if="showUnsteganText">
+                <div style="font-size: 18px;">版权文字信息: 
+                    <a-typography-text strong>{{ unsteganText }}</a-typography-text>
+                </div>
+            </a-typography-paragraph>
+        </a-col>
+    </a-row>
 </template>
 
 <script>
@@ -92,41 +98,38 @@ export default defineComponent({
 </script>
 
 <style>
-.upload-container {
-    display: flex;
-    align-items: flex-start;
-}
-
 .upload-box {
-    width: 400px;
-    height: 400px;
-    border: 2px dashed #aaa;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
+  width: 300px;
+  height: 300px;
+  border: 1.5px dashed #c2c2c2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
 }
 
-.upload-button {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.upload-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
 }
 
-.upload-button img {
-    max-width: 100%;
-    max-height: 100%;
+.upload-container img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
 }
 
-.input-section {
-    margin-left: 20px;
-    display: flex;
-    flex-direction: column;
-}
-
-.button-wrapper {
-    display: flex;
-    justify-content: center;
-    margin: 10px;
+.upload-text {
+  margin-top: 8px;
+  color: #666;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
 </style>

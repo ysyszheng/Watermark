@@ -1,60 +1,47 @@
 <template>
-  <a-upload
-    v-model:file-list="fileList"
-    name="avatar"
-    list-type="picture-card"
-    class="avatar-uploader"
-    :show-upload-list="false"
-    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-    :before-upload="beforeUpload"
-    @change="handleChange"
-  >
-    <img v-if="imageUrl" :src="imageUrl" alt="avatar" />
-    <div v-else>
-      <loading-outlined v-if="loading"></loading-outlined>
-      <plus-outlined v-else></plus-outlined>
-      <div class="ant-upload-text">Upload</div>
-    </div>
-  </a-upload>
-
-  <div class="upload-container">
-    <div class="upload-box">
-      <input type="file" accept="image/*" ref="fileInput" style="display: none;" id="upload_img"
-        @change="handleFileUpload">
-      <div class="upload-button" @click="openFileUpload">
-        <span v-if="!uploadedImageURL">点击上传图片</span>
-        <img :src="uploadedImageURL" v-else>
+  <a-row>
+    <a-col :span="8">
+      <div class="upload-box" @click="openFileUpload">
+        <input type="file" accept="image/*" ref="fileInput" style="display: none;" id="upload_img"
+          @change="handleFileUpload">
+        <div class="upload-container">
+          <span v-if="!uploadedImageURL">
+            <div class="upload-text">点击上传图片</div>
+          </span>
+          <img :src="uploadedImageURL" v-else>
+        </div>
       </div>
-    </div>
-    <div class="input-section">
-      <div class="input-wrapper">
-        <a-textarea v-model:value="textInput" show-count :maxlength="100" placeholder="请输入文字" />
-      </div>
-      <div class="button-wrapper">
-        <a-button @click="SubmitImage" type="primary" shape="round" :size="size">提交图片-隐写</a-button>
-      </div>
-      <div class="button-wrapper">
-        <a-button @click="DownloadImage" type="primary" shape="round" :size="size">
+    </a-col>
+    <a-col :span="8">
+      <div class="input-button-container">
+        <a-input v-model:value="textInput" placeholder="请输入版权证明文字" class="input-field" />
+        <a-button @click="SubmitImage" type="primary" class="button">文字隐写</a-button>
+        <a-button @click="DownloadImage" type="primary" class="button">
           <template #icon>
             <DownloadOutlined />
           </template>
           下载隐写后的图片
         </a-button>
       </div>
-    </div>
-  </div>
-  <div v-if="showSteganImg">
-    <img :src="steganImg" alt="steganImg" class="image" />
-  </div>
+    </a-col>
+    <a-col :span="8">
+      <div v-if="showSteganImg" class="stegan-container">
+        <a-image :src="steganImg" alt="steganImg" />
+      </div>
+    </a-col>
+  </a-row>
 </template>
 
 <script>
 import axios from 'axios';
 import { defineComponent, ref, inject } from 'vue';
-import { DownloadOutlined } from '@ant-design/icons-vue';
+import { DownloadOutlined, InboxOutlined, PlusOutlined } from '@ant-design/icons-vue';
+
 export default defineComponent({
   components: {
     DownloadOutlined,
+    InboxOutlined,
+    PlusOutlined,
   },
   setup() {
     const textInput = ref('');
@@ -158,45 +145,69 @@ export default defineComponent({
 </script>
 
 <style>
-.upload-container {
-  display: flex;
-  align-items: flex-start;
-}
-
 .upload-box {
-  width: 400px;
-  height: 400px;
-  border: 2px dashed #aaa;
+  width: 300px;
+  height: 300px;
+  border: 1.5px dashed #c2c2c2;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
 }
 
-.upload-button {
+.upload-container {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
+  width: 100%;
+  height: 100%;
 }
 
-.upload-button img {
+.upload-container img {
   max-width: 100%;
   max-height: 100%;
+  object-fit: contain;
 }
 
-.input-section {
-  margin-left: 20px;
-  display: flex;
-  flex-direction: column;
-}
-
-.input-wrapper {
-  margin-bottom: 10px;
-}
-
-.button-wrapper {
+.upload-text {
+  margin-top: 8px;
+  color: #666;
+  text-align: center;
   display: flex;
   justify-content: center;
-  margin: 10px;
+  align-items: center;
+  height: 100%;
+}
+
+.stegan-container {
+  width: 300px;
+  height: 300px;
+  /* border: 2px solid #c2c2c2; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+}
+
+.stegan-container a-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* 控制间距的属性 */
+}
+
+.input-field {
+  margin-bottom: 8px; /* 添加下方间距 */
+}
+
+.button {
+  margin-top: 8px; /* 添加上方间距 */
+  margin-right: 20px; /* 添加右侧间距 */
 }
 </style>
