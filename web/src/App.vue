@@ -54,9 +54,7 @@ export default {
 
     return{
       getid,
-
     };
-
   },
 
 data() {

@@ -14,14 +14,22 @@
         <a-textarea v-model:value="textInput" show-count :maxlength="100" placeholder="请输入文字" />
       </div>
       <div class="button-wrapper">
-        <button @click="SubmitImage">提交图片-隐写</button>
+        <!-- <button @click="SubmitImage">提交图片-隐写</button> -->
+        <a-button @click="SubmitImage" type="primary" shape="round" :size="size">提交图片-隐写</a-button>
       </div>
       <div class="button-wrapper">
-        <button @click="SubmitProcessedImage">提交图片-反隐写</button>
+        <!-- <button @click="SubmitProcessedImage">提交图片-反隐写</button> -->
+        <a-button @click="SubmitProcessedImage" type="primary" shape="round" :size="size">提取隐写内容</a-button>
         <div v-if="showUnsteganText">{{ unsteganText }}</div>
       </div>
       <div class="button-wrapper">
-        <button @click="DownloadImage">下载隐写后的图片</button>
+        <!-- <button @click="DownloadImage">下载隐写后的图片</button> -->
+        <a-button @click="DownloadImage" type="primary" shape="round" :size="size">
+          <template #icon>
+            <DownloadOutlined />
+          </template>
+          下载隐写后的图片
+        </a-button>
       </div>
     </div>
   </div>
@@ -33,12 +41,17 @@
 <script>
 import axios from 'axios';
 import { defineComponent, ref } from 'vue';
+import { DownloadOutlined } from '@ant-design/icons-vue';
 
 export default defineComponent ({
+  components: {
+    DownloadOutlined,
+  },
   setup() {
     const textInput = ref('');
     return {
       textInput,
+      size: ref('large'),
     };
   },
   data() {
