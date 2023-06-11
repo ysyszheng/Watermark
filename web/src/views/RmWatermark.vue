@@ -1,0 +1,215 @@
+<template>
+  <div class="upload-container">
+    <div class="upload-box">
+      <input type="file" accept="image/*" ref="fileInput" style="display: none;" id="upload_img" @change="handleFileUpload">
+      <div class="upload-button" @click="openFileUpload">
+        <span v-if="!uploadedImageURL">点击上传图片</span>
+        <img :src="uploadedImageURL" v-else>
+      </div>
+    </div>
+    <div class="input-section">
+      <div class="input-wrapper">
+        <input type="text" v-model="textInput" placeholder="请输入文字">
+      </div>
+      <div class="button-wrapper">
+        <button @click="SubmitImage">提交图片-水印</button>
+      </div>
+      <div class="button-wrapper">
+        <button @click="SubmitProcessedImage">提交图片-去水印</button>
+        <div v-if="showUnsteganText">{{ unsteganText }}</div>
+      </div>
+      <div class="button-wrapper">
+        <button @click="DownloadImage">下载加水印后的图片</button>
+      </div>
+    </div>
+  </div>
+  <div v-if="showSteganImg">
+    <img :src="steganImg" alt="steganImg" class="image"/>
+  </div>
+</template>
+
+<script>
+import axios from 'axios';
+import {ref, onMounted, watch, inject } from "vue";
+export default {
+  setup() {
+    const url = inject('$url');
+    return{
+      url
+    }
+  },
+  data() {
+    return {
+      uploadedImageURL: null,
+      uploadedImageFile: null,
+      textInput: '',
+      showUnsteganText: false, // 控制是否显示去水印内容
+      unsteganText: '', // 水印的文字内容
+      showSteganImg: false, // 控制是否显示加水印的图片
+      steganImg: '', // 加水印后的图片
+    };
+  },
+  methods: {
+    handleFileUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        this.uploadedImageURL = URL.createObjectURL(file);
+        this.uploadedImageFile = file;
+        // console.log(this.uploadedImage)
+      }
+    },
+    openFileUpload() {
+      this.$refs.fileInput.click();
+    },
+    SubmitImage() {
+      // 上传图片及要加水印的文字
+      // console.log(this.textInput)
+      // console.log(this.uploadedImageFile)
+      var text = this.textInput;
+      if (text == '') {
+        alert("请输入要隐写的文字！");
+        return;
+      }
+      var file = this.uploadedImageFile;
+      var formData = new FormData()
+      console.log("uploadImage_watermark:")
+
+      var jaccount = sessionStorage.getItem("jaccount");
+      var that = this;
+      formData.append("jaccount", jaccount);
+      formData.append("upload_file", file);
+      formData.append("text", text);
+
+
+      axios
+        // .post("http://localhost:8000/index/watermark/", formData)
+        .post(that.url + "/index/watermark/", formData)
+        .then(function (response)
+        {
+          // 处理返回的图片格式并展示
+            console.log(response.data["key"]);
+            if (response.data["key"] == 1) {
+              console.log("Watermark成功！");
+              console.log(response.data['watermark_photo'])
+              that.showSteganImg = true;
+              that.steganImg = that.url + "/media/" + response.data['watermark_photo'];
+            }
+            if (response.data["key"] == 0) {
+              console.log("Watermark失败！");
+            }
+        })
+        .catch(function (error){
+          console.log(error)
+        });
+      
+
+    },
+    SubmitProcessedImage() {
+      // 上传要去水印的图片
+      // console.log(this.textInput)
+      // console.log(this.uploadedImageFile)
+      var file = this.uploadedImageFile;
+      var formData = new FormData()
+      console.log("uploadImage_watermark:")
+
+      var jaccount = sessionStorage.getItem("jaccount");
+
+      formData.append("jaccount", jaccount);
+      formData.append("upload_file", file);
+
+      axios
+        // .post("http://localhost:8000/index/unstegan/", formData)
+        .post(this.url + "/index/unstegan/", formData)
+        .then(response => {
+          if (response.data["key"] == 1) {
+            console.log("Unstegan成功！");
+            console.log(response.data['unstegan_text']);
+            this.unsteganText = response.data['unstegan_text']; // 将反隐写的文字内容赋值给变量
+            this.showUnsteganText = true; // 反隐写成功后设置为true
+            sessionStorage.setItem("unstegan_text", response.data['unstegan_text']);
+          }
+          if (response.data["key"] == 0) {
+            console.log("Unstegan失败！");
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    DownloadImage() {
+      var stegan_photo = sessionStorage.getItem("stegan_photo");
+      console.log("stegan_photo:");
+      console.log(stegan_photo);
+      
+      // 拼接完整的图片URL
+      // var imageUrl = "http://localhost:8000/media/" + stegan_photo;
+      var imageUrl = this.url + "/media/" + stegan_photo;
+      
+      // 发送GET请求获取图片数据
+      axios.get(imageUrl, { responseType: 'blob' })
+        .then(response => {
+          // 创建一个下载链接
+          var url = window.URL.createObjectURL(new Blob([response.data]));
+          
+          // 创建一个隐藏的下载链接，并模拟点击下载
+          var link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('download', stegan_photo);
+          link.style.display = 'none';
+          document.body.appendChild(link);
+          link.click();
+          
+          // 清理下载链接
+          document.body.removeChild(link);
+        })
+        .catch(error => {
+          console.error("下载图片失败:", error);
+        });
+    }
+  }
+};
+</script>
+
+<style>
+.upload-container {
+  display: flex;
+  align-items: flex-start;
+}
+
+.upload-box {
+  width: 400px;
+  height: 400px;
+  border: 2px dashed #aaa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.upload-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.upload-button img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.input-section {
+  margin-left: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.input-wrapper {
+  margin-bottom: 10px;
+}
+
+.button-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 10px;
+}
+</style>
