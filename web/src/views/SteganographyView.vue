@@ -11,14 +11,18 @@
       <div class="input-wrapper">
         <input type="text" v-model="textInput" placeholder="请输入文字">
       </div>
-      <div class="button-wrapper">
+      <!-- <div class="button-wrapper">
         <button @click="generateImage">生成带有文字的图片</button>
-      </div>
+      </div> -->
       <div class="button-wrapper">
         <button @click="SubmitImage">提交图片-隐写</button>
       </div>
       <div class="button-wrapper">
         <button @click="SubmitProcessedImage">提交图片-反隐写</button>
+        <div v-if="showUnsteganText">{{ unsteganText }}</div>
+      </div>
+      <div class="button-wrapper">
+        <button @click="DownloadImage">下载隐写后的图片</button>
       </div>
     </div>
   </div>
@@ -32,7 +36,9 @@ export default {
     return {
       uploadedImageURL: null,
       uploadedImageFile: null,
-      textInput: ''
+      textInput: '',
+      showUnsteganText: false, // 控制是否显示反隐写文字内容
+      unsteganText: '' // 反隐写的文字内容
     };
   },
   methods: {
@@ -47,9 +53,9 @@ export default {
     openFileUpload() {
       this.$refs.fileInput.click();
     },
-    generateImage() {
-      // 生成带有文字的图片的逻辑
-    },
+    // generateImage() {
+    //   // 生成带有文字的图片的逻辑
+    // },
     SubmitImage() {
       // 上传图片及要隐写的文字
       // console.log(this.textInput)
@@ -75,6 +81,7 @@ export default {
             if (response.data["key"] == 1) {
               console.log("Stegan成功！");
               console.log(response.data['stegan_photo'])
+              sessionStorage.setItem("stegan_photo", response.data['stegan_photo']);
             }
             if (response.data["key"] == 0) {
               console.log("Stegan失败！");
@@ -100,23 +107,51 @@ export default {
 
       axios
         .post("http://localhost:8000/index/unstegan/", formData)
-        .then(function (response)
-        {
-          // 处理返回的图片格式并展示
-            console.log(response.data["key"]);
-            if (response.data["key"] == 1) {
-              console.log("Unstegan成功！");
-              console.log(response.data['unstegan_text'])
-            }
-            if (response.data["key"] == 0) {
-              console.log("Unstegan失败！");
-            }
+        .then(response => {
+          if (response.data["key"] == 1) {
+            console.log("Unstegan成功！");
+            console.log(response.data['unstegan_text']);
+            this.unsteganText = response.data['unstegan_text']; // 将反隐写的文字内容赋值给变量
+            this.showUnsteganText = true; // 反隐写成功后设置为true
+            sessionStorage.setItem("unstegan_text", response.data['unstegan_text']);
+          }
+          if (response.data["key"] == 0) {
+            console.log("Unstegan失败！");
+          }
         })
-        .catch(function (error){
-          console.log(error)
+        .catch(error => {
+          console.log(error);
         });
-
     },
+    DownloadImage() {
+      var stegan_photo = sessionStorage.getItem("stegan_photo");
+      console.log("stegan_photo:");
+      console.log(stegan_photo);
+      
+      // 拼接完整的图片URL
+      var imageUrl = "http://localhost:8000/media/" + stegan_photo;
+      
+      // 发送GET请求获取图片数据
+      axios.get(imageUrl, { responseType: 'blob' })
+        .then(response => {
+          // 创建一个下载链接
+          var url = window.URL.createObjectURL(new Blob([response.data]));
+          
+          // 创建一个隐藏的下载链接，并模拟点击下载
+          var link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('download', stegan_photo);
+          link.style.display = 'none';
+          document.body.appendChild(link);
+          link.click();
+          
+          // 清理下载链接
+          document.body.removeChild(link);
+        })
+        .catch(error => {
+          console.error("下载图片失败:", error);
+        });
+    }
   }
 };
 </script>

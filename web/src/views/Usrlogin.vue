@@ -6,7 +6,7 @@
       <a href="javascript:void(0)">登录</a>
     </p>
     <div v-if="popupVisible1" class="popup">
-      <a href='http://localhost:5173/history'>从jaccount登录</a>
+      <a href='http://localhost:8000/login/'>从jaccount登录</a>
       <button @click="hidePopup1">取消</button>
     </div>
   </div>
