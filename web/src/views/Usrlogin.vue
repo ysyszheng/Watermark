@@ -1,12 +1,18 @@
 <template>
 
 
+
   <div>
     <p :class="{ 'link': popupVisible1 }" @click="showPopup1">
       <a href="javascript:void(0)">登录</a>
     </p>
     <div v-if="popupVisible1" class="popup">
+<<<<<<< Updated upstream
       <a href='http://localhost:8000/login/'>从jaccount登录</a>
+=======
+      <a href='http://localhost:8000/login'>从jaccount登录</a>
+<!--      <button @click="login">login</button>-->
+>>>>>>> Stashed changes
       <button @click="hidePopup1">取消</button>
     </div>
   </div>
@@ -22,6 +28,11 @@ export default {
     }
   },
   methods: {
+    /*login(){
+      this.$root.$isLogged = true;
+      this.isLogged = true;
+      this.popupVisible1 = false
+    },*/
 
     showPopup1() {
       this.popupVisible1 = true
