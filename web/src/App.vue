@@ -11,7 +11,7 @@ import Header from './components/Header.vue';
         <RouterLink v-if="isLogged" to="/steganography" class="nav-link">数据隐写</RouterLink>
         <RouterLink v-if="isLogged" to="/watermark" class="nav-link">图片水印</RouterLink>
         <RouterLink v-if="!isLogged" to="/login" class="nav-link">账号登录</RouterLink>
-<!--        <RouterLink v-if="isLogged" to="/profile" class="nav-link">账号登出</RouterLink>-->
+        <RouterLink v-if="isLogged" to="/profile" class="nav-link">账号登出</RouterLink>
       </div>
     </nav>
   </div>
