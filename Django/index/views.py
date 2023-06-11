@@ -33,6 +33,7 @@ def index_view(request):
         
         user = User.objects.filter(jaccount=jaccount)[0]
         
+        # 返回隐写图片
         images = Image.objects.filter(user=user, type="stegan")
         image_set = []
 
@@ -46,6 +47,20 @@ def index_view(request):
             except:
                 continue
             image_set.append(tmp)
+
+        # 返回水印图片
+        images = Image.objects.filter(user=user, type="watermark")
+        watermark_set = []
+        for image in images:
+            tmp = {"id": image.id, 'username': result}
+            try:
+                tmp['text'] = image.text
+                tmp['photo_clean'] = image.photo_input.__dict__['name']
+                tmp['photo_processed'] = image.photo_output
+                tmp['file_time'] = image.file_time
+            except:
+                continue
+            watermark_set.append(tmp)
         
         print(f"Hello {result}!")
     except:
@@ -53,6 +68,7 @@ def index_view(request):
         jaccount = '0000'
         user = User.objects.filter(jaccount='0000')[0]
         image_set = []
+        watermark_set = []
         print(f"Please login!")
         print("except!")
     
@@ -60,6 +76,7 @@ def index_view(request):
         'name': result,
         'account': jaccount,
         'image_set': image_set,
+        'watermark_set': watermark_set,
     }
     print(image_set)
     return HttpResponse(json.dumps(id_info), content_type="application/json")

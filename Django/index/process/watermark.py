@@ -2,13 +2,10 @@ import numpy as np
 from PIL import Image, ImageDraw,ImageFont
 import argparse
 
-def addWatermark(image_path,text):
-    image=Image.open(image_path)
+def addWatermark(image,text):
     draw = ImageDraw.Draw(image)
     draw.text((50,50),text)
-
-    image.save('output.png') 
-
+    return image
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="watermarker")

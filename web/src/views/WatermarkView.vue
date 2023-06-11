@@ -12,14 +12,14 @@
         <input type="text" v-model="textInput" placeholder="请输入文字">
       </div>
       <div class="button-wrapper">
-        <button @click="SubmitImage">提交图片-隐写</button>
+        <button @click="SubmitImage">提交图片-水印</button>
       </div>
       <div class="button-wrapper">
-        <button @click="SubmitProcessedImage">提交图片-反隐写</button>
+        <button @click="SubmitProcessedImage">提交图片-去水印</button>
         <div v-if="showUnsteganText">{{ unsteganText }}</div>
       </div>
       <div class="button-wrapper">
-        <button @click="DownloadImage">下载隐写后的图片</button>
+        <button @click="DownloadImage">下载加水印后的图片</button>
       </div>
     </div>
   </div>
@@ -30,17 +30,23 @@
 
 <script>
 import axios from 'axios';
-
+import {ref, onMounted, watch, inject } from "vue";
 export default {
+  setup() {
+    const url = inject('$url');
+    return{
+      url
+    }
+  },
   data() {
     return {
       uploadedImageURL: null,
       uploadedImageFile: null,
       textInput: '',
-      showUnsteganText: false, // 控制是否显示反隐写文字内容
-      unsteganText: '', // 反隐写的文字内容
-      showSteganImg: false, // 控制是否显示隐写后的图片
-      steganImg: '', // 隐写后的图片
+      showUnsteganText: false, // 控制是否显示去水印内容
+      unsteganText: '', // 水印的文字内容
+      showSteganImg: false, // 控制是否显示加水印的图片
+      steganImg: '', // 加水印后的图片
     };
   },
   methods: {
@@ -56,10 +62,9 @@ export default {
       this.$refs.fileInput.click();
     },
     SubmitImage() {
-      // 上传图片及要隐写的文字
+      // 上传图片及要加水印的文字
       // console.log(this.textInput)
       // console.log(this.uploadedImageFile)
-
       var text = this.textInput;
       if (text == '') {
         alert("请输入要隐写的文字！");
@@ -67,43 +72,45 @@ export default {
       }
       var file = this.uploadedImageFile;
       var formData = new FormData()
-      console.log("uploadImage_stegan:")
+      console.log("uploadImage_watermark:")
 
       var jaccount = sessionStorage.getItem("jaccount");
-
+      var that = this;
       formData.append("jaccount", jaccount);
       formData.append("upload_file", file);
       formData.append("text", text);
 
+
       axios
-        .post("http://localhost:8000/index/stegan/", formData)
+        // .post("http://localhost:8000/index/watermark/", formData)
+        .post(that.url + "/index/watermark/", formData)
         .then(function (response)
         {
           // 处理返回的图片格式并展示
             console.log(response.data["key"]);
             if (response.data["key"] == 1) {
-              console.log("Stegan成功！");
-              console.log(response.data['stegan_photo'])
-              sessionStorage.setItem("stegan_photo", response.data['stegan_photo']);
+              console.log("Watermark成功！");
+              console.log(response.data['watermark_photo'])
+              that.showSteganImg = true;
+              that.steganImg = that.url + "/media/" + response.data['watermark_photo'];
             }
             if (response.data["key"] == 0) {
-              console.log("Stegan失败！");
+              console.log("Watermark失败！");
             }
         })
         .catch(function (error){
           console.log(error)
         });
       
-      this.showSteganImg = true;
-      this.steganImg = "http://localhost:8000/media/" + sessionStorage.getItem("stegan_photo");
+
     },
     SubmitProcessedImage() {
-      // 上传要反隐写的图片
+      // 上传要去水印的图片
       // console.log(this.textInput)
       // console.log(this.uploadedImageFile)
       var file = this.uploadedImageFile;
       var formData = new FormData()
-      console.log("uploadImage_unstegan:")
+      console.log("uploadImage_watermark:")
 
       var jaccount = sessionStorage.getItem("jaccount");
 
@@ -111,7 +118,8 @@ export default {
       formData.append("upload_file", file);
 
       axios
-        .post("http://localhost:8000/index/unstegan/", formData)
+        // .post("http://localhost:8000/index/unstegan/", formData)
+        .post(this.url + "/index/unstegan/", formData)
         .then(response => {
           if (response.data["key"] == 1) {
             console.log("Unstegan成功！");
@@ -134,7 +142,8 @@ export default {
       console.log(stegan_photo);
       
       // 拼接完整的图片URL
-      var imageUrl = "http://localhost:8000/media/" + stegan_photo;
+      // var imageUrl = "http://localhost:8000/media/" + stegan_photo;
+      var imageUrl = this.url + "/media/" + stegan_photo;
       
       // 发送GET请求获取图片数据
       axios.get(imageUrl, { responseType: 'blob' })

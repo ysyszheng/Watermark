@@ -8,8 +8,8 @@
     </p>
     <div v-if="popupVisible1" class="popup">
 
-      <a href='http://localhost:8000/login/'>从jaccount登录</a>
-
+<!--      <a href='http://localhost:8000/login/'>从jaccount登录</a>-->
+      <button @click="LOGIN">通过jaccount登录</button>
       <button @click="hidePopup1">取消</button>
     </div>
   </div>
@@ -17,7 +17,14 @@
 </template>
 
 <script>
+import {ref, onMounted, watch, inject } from "vue";
 export default {
+  setup() {
+    const url = inject('$url');
+    return{
+      url
+    }
+  },
   data() {
     return {
       popupVisible2: false,
@@ -37,6 +44,9 @@ export default {
     hidePopup1() {
       this.popupVisible1 = false
     },
+    LOGIN(){
+      window.location.href = this.url + '/login/';
+    }
 
 
   }

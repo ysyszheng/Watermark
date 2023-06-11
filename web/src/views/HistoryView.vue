@@ -26,7 +26,15 @@
 </template>
 
 <script>
+import axios from 'axios'
+import {ref, onMounted, watch, inject } from "vue";
 export default {
+  setup() {
+    const url = inject('$url');
+    return{
+      url
+    }
+  },
   data() {
     return {
       imageSet: [] // 存储历史图片记录
@@ -48,7 +56,7 @@ export default {
     },
     getImageUrl(filename) {
       // 生成图片的URL
-      return "http://localhost:8000/media/" + filename
+      return this.url + "/media/" + filename
     }
   }
 }

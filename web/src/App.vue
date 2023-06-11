@@ -63,7 +63,8 @@ import {
   FileImageOutlined,
   FileProtectOutlined,
 } from '@ant-design/icons-vue';
-import { defineComponent, ref, onMounted } from 'vue';
+import { defineComponent, ref, onMounted, watch, inject } from "vue";
+import axios from "axios";
 import axiosInstance from './api/index.js'
 
 export default defineComponent ({
@@ -77,19 +78,19 @@ export default defineComponent ({
     FileProtectOutlined,
   },
   setup() {
+    const url = inject('$url')
     const axios = axiosInstance
     const getid = () => {
-      return axios.get('http://localhost:8000')
+      return axios.get(url)
     }
-
     console.log("reload");
 
     axios
-      .get('http://localhost:8000')
-      .then((response) => {
-        console.log("Hello ")
-        console.log(response.data["name"])
-        console.log(response.data["image_set"])
+        .get(url)
+        .then((response) => {
+          console.log("Hello ")
+          console.log(response.data["name"])
+          console.log(response.data["image_set"])
 
         sessionStorage.setItem("name", response.data["name"]);
         sessionStorage.setItem("jaccount", response.data["account"]);
@@ -113,6 +114,7 @@ export default defineComponent ({
       isLogged,
       collapsed: ref(false),
       selectedKeys: ref(['1']),
+      url,
     }
 
     onMounted(() => {
