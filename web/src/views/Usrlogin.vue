@@ -17,7 +17,14 @@
 </template>
 
 <script>
+import {ref, onMounted, watch, inject } from "vue";
 export default {
+  setup() {
+    const url = inject('$url');
+    return{
+      url
+    }
+  },
   data() {
     return {
       popupVisible2: false,
@@ -38,7 +45,7 @@ export default {
       this.popupVisible1 = false
     },
     LOGIN(){
-      window.location.href = 'http://localhost:8000/login/';
+      window.location.href = this.url + '/login/';
     }
 
 

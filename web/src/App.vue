@@ -21,24 +21,21 @@ import Header from './components/Header.vue';
 
 <script>
 // import { getid } from "./api/api.js";
-import {ref, onMounted, watch } from "vue";
+import {ref, onMounted, watch, inject} from "vue";
 import axios from "axios";
 import axiosInstance from './api/index.js'
 import {getid} from "@/api/api";
 export default {
   name: "App",
   setup() {
+    const url = inject('$url')
     const axios = axiosInstance
     const getid = () => {
-      return axios.get('http://localhost:8000')
+      return axios.get(url)
     }
-
     console.log("reload");
-
-    // const response = getid();
-
     axios
-        .get('http://localhost:8000')
+        .get(url)
         .then((response) => {
           console.log("Hello ")
           console.log(response.data["name"])
@@ -51,14 +48,6 @@ export default {
 
         })
 
-
-
-
-
-
-
-
-
     const isLogged = ref(false)
     const username = ref(null)
 
@@ -68,13 +57,11 @@ export default {
       username.value = sessionStorage.getItem("name")
     }
 
-
-
       return {
       getid,
       username,
       isLogged,
-
+      url
     }
 
 

@@ -21,16 +21,15 @@
 </template>
 
 <script>
-import { ref } from 'vue';
 import axios from 'axios';
-
+import {ref, onMounted, watch, inject } from "vue";
 export default {
   name: 'homepage',
   setup()
   {
     const islogin = ref(false)
     const username = ref(null)
-
+    const url = inject("url");
     if (sessionStorage.getItem("jaccount") == "0000" | sessionStorage.getItem("jaccount") == null) islogin.value = false
     else {
       islogin.value = true
@@ -40,7 +39,7 @@ export default {
     return{
       username,
       islogin,
-
+      url,
     }
   },
 
@@ -69,12 +68,8 @@ methods:{
       this.popupVisible2 = false
     },
 
-
-
-
-
   LOGOUT(){
-      window.location.href = 'http://localhost:8000/logout/';
+      window.location.href = this.url + '/logout/';
     }
 },
 

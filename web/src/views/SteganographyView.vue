@@ -40,18 +40,19 @@
 
 <script>
 import axios from 'axios';
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, inject } from 'vue';
 import { DownloadOutlined } from '@ant-design/icons-vue';
-
 export default defineComponent ({
   components: {
     DownloadOutlined,
   },
   setup() {
     const textInput = ref('');
+    const url = inject('$url');
     return {
       textInput,
       size: ref('large'),
+      url,
     };
   },
   data() {
@@ -81,7 +82,6 @@ export default defineComponent ({
       // 上传图片及要隐写的文字
       // console.log(this.textInput)
       // console.log(this.uploadedImageFile)
-
       var text = this.textInput;
       if (text == '') {
         alert("请输入要隐写的文字！");
@@ -99,7 +99,8 @@ export default defineComponent ({
       formData.append("text", text);
 
       axios
-        .post("http://localhost:8000/index/stegan/", formData)
+        // .post("http://localhost:8000/index/stegan/", formData)
+        .post(that.url + "/index/stegan/", formData)
         .then(function (response)
         {
           // 处理返回的图片格式并展示
@@ -109,7 +110,7 @@ export default defineComponent ({
               console.log(response.data['stegan_photo'])
               // sessionStorage.setItem("stegan_photo", response.data['stegan_photo']);
               that.showSteganImg = true;
-              that.steganImg = "http://localhost:8000/media/" + response.data['stegan_photo'];
+              that.steganImg = that.url + "/media/" + response.data['stegan_photo'];
             }
             if (response.data["key"] == 0) {
               console.log("Stegan失败！");
@@ -127,20 +128,19 @@ export default defineComponent ({
       var file = this.uploadedImageFile;
       var formData = new FormData()
       console.log("uploadImage_unstegan:")
-
       var jaccount = sessionStorage.getItem("jaccount");
-
+      var that = this
       formData.append("jaccount", jaccount);
       formData.append("upload_file", file);
 
       axios
-        .post("http://localhost:8000/index/unstegan/", formData)
+        .post(that.url + "/index/unstegan/", formData)
         .then(response => {
           if (response.data["key"] == 1) {
             console.log("Unstegan成功！");
             console.log(response.data['unstegan_text']);
-            this.unsteganText = response.data['unstegan_text']; // 将反隐写的文字内容赋值给变量
-            this.showUnsteganText = true; // 反隐写成功后设置为true
+            that.unsteganText = response.data['unstegan_text']; // 将反隐写的文字内容赋值给变量
+            that.showUnsteganText = true; // 反隐写成功后设置为true
             sessionStorage.setItem("unstegan_text", response.data['unstegan_text']);
           }
           if (response.data["key"] == 0) {
@@ -155,9 +155,8 @@ export default defineComponent ({
       var stegan_photo = sessionStorage.getItem("stegan_photo");
       console.log("stegan_photo:");
       console.log(stegan_photo);
-      
       // 拼接完整的图片URL
-      var imageUrl = "http://localhost:8000/media/" + stegan_photo;
+      var imageUrl = this.url + "/media/" + stegan_photo;
       
       // 发送GET请求获取图片数据
       axios.get(imageUrl, { responseType: 'blob' })

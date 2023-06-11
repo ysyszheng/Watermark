@@ -18,7 +18,14 @@
 </template>
 
 <script>
+import {ref, onMounted, watch, inject } from "vue";
 export default {
+  setup() {
+    const url = inject('$url');
+    return{
+      url
+    }
+  },
   data() {
     return {
       popupVisible2: false,
@@ -31,7 +38,7 @@ export default {
       this.isLogged = true;
       this.popupVisible1 = false
     },*/
-
+    
     showPopup1() {
       this.popupVisible1 = true
     },
@@ -39,7 +46,7 @@ export default {
       this.popupVisible1 = false
     },
     LOGOUT(){
-      window.location.href = 'http://localhost:8000/logout/';
+      window.location.href = this.url + '/logout/';
     }
 
 

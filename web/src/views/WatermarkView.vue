@@ -30,8 +30,14 @@
 
 <script>
 import axios from 'axios';
-
+import {ref, onMounted, watch, inject } from "vue";
 export default {
+  setup() {
+    const url = inject('$url');
+    return{
+      url
+    }
+  },
   data() {
     return {
       uploadedImageURL: null,
@@ -59,7 +65,6 @@ export default {
       // 上传图片及要加水印的文字
       // console.log(this.textInput)
       // console.log(this.uploadedImageFile)
-
       var text = this.textInput;
       if (text == '') {
         alert("请输入要隐写的文字！");
@@ -75,8 +80,10 @@ export default {
       formData.append("upload_file", file);
       formData.append("text", text);
 
+
       axios
-        .post("http://localhost:8000/index/watermark/", formData)
+        // .post("http://localhost:8000/index/watermark/", formData)
+        .post(that.url + "/index/watermark/", formData)
         .then(function (response)
         {
           // 处理返回的图片格式并展示
@@ -85,7 +92,7 @@ export default {
               console.log("Watermark成功！");
               console.log(response.data['watermark_photo'])
               that.showSteganImg = true;
-              that.steganImg = "http://localhost:8000/media/" + response.data['watermark_photo'];
+              that.steganImg = that.url + "/media/" + response.data['watermark_photo'];
             }
             if (response.data["key"] == 0) {
               console.log("Watermark失败！");
@@ -111,7 +118,8 @@ export default {
       formData.append("upload_file", file);
 
       axios
-        .post("http://localhost:8000/index/unstegan/", formData)
+        // .post("http://localhost:8000/index/unstegan/", formData)
+        .post(this.url + "/index/unstegan/", formData)
         .then(response => {
           if (response.data["key"] == 1) {
             console.log("Unstegan成功！");
@@ -134,7 +142,8 @@ export default {
       console.log(stegan_photo);
       
       // 拼接完整的图片URL
-      var imageUrl = "http://localhost:8000/media/" + stegan_photo;
+      // var imageUrl = "http://localhost:8000/media/" + stegan_photo;
+      var imageUrl = this.url + "/media/" + stegan_photo;
       
       // 发送GET请求获取图片数据
       axios.get(imageUrl, { responseType: 'blob' })
