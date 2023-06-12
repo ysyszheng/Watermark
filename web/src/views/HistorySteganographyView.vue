@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-alert message="左侧为原图, 右侧为添加版权隐写后的图片" type="info" />
+    <a-alert message="左侧为原图, 右侧为添加版权隐写后的图片, 点击图片可以放大预览" type="info" />
     <div v-for="image in imageSet" :key="image.id">
       <div>
         <a-divider>{{ image.file_time }}</a-divider>

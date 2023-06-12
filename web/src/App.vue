@@ -8,39 +8,49 @@
       </div>
       <!-- <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline"> -->
       <a-menu v-model:openKeys="openKeys" theme="dark" mode="inline">
-        <a-menu-item key="6">
+        <a-menu-item key="1">
           <user-outlined />
           <span></span><RouterLink to="/">个人信息</RouterLink>
         </a-menu-item>
-        <a-menu-item key="1" v-if="isLogged">
-          <history-outlined />
-          <span></span><RouterLink to="/history">历史记录</RouterLink>
-        </a-menu-item>
         <a-sub-menu key="sub1" v-if="isLogged">
+          <template #title>
+            <span>
+              <history-outlined />
+              <span>历史记录</span>
+            </span>
+          </template>
+          <a-menu-item key="2">
+            <RouterLink to="/historysg">隐写记录</RouterLink>
+          </a-menu-item>
+          <a-menu-item key="3">
+            <RouterLink to="/historywm">水印记录</RouterLink>
+          </a-menu-item>
+        </a-sub-menu>
+        <a-sub-menu key="sub2" v-if="isLogged">
           <template #title>
             <span>
               <file-protect-outlined />
               <span>数据隐写</span>
             </span>
           </template>
-          <a-menu-item key="2">
+          <a-menu-item key="4">
             <RouterLink to="/addsg">图片隐写</RouterLink>
           </a-menu-item>
-          <a-menu-item key="3">
+          <a-menu-item key="5">
             <RouterLink to="/rmsg">隐写提取</RouterLink>
           </a-menu-item>
         </a-sub-menu>
-        <a-sub-menu key="sub2" v-if="isLogged">
+        <a-sub-menu key="sub3" v-if="isLogged">
           <template #title>
             <span>
               <file-image-outlined />
               <span>图片水印</span>
             </span>
           </template>
-          <a-menu-item key="4">
+          <a-menu-item key="6">
             <RouterLink to="/addwm">添加水印</RouterLink>
           </a-menu-item>
-          <a-menu-item key="5">
+          <a-menu-item key="7">
             <RouterLink to="/rmwm">去除水印</RouterLink>
           </a-menu-item>
         </a-sub-menu>
@@ -101,12 +111,14 @@ export default defineComponent ({
           console.log("Hello ")
           console.log(response.data["name"])
           console.log(response.data["image_set"])
+          console.log(response.data["watermark_set"])
 
         sessionStorage.setItem("name", response.data["name"]);
         sessionStorage.setItem("jaccount", response.data["account"]);
         const jsonStr = JSON.stringify(response.data["image_set"]);
         sessionStorage.setItem("image_set", jsonStr);
-
+        const jsonStr2 = JSON.stringify(response.data["watermark_set"]);
+        sessionStorage.setItem("watermark_set", jsonStr2);
       })
 
     const isLogged = ref(false)
@@ -123,8 +135,8 @@ export default defineComponent ({
       username,
       isLogged,
       collapsed: ref(false),
-      selectedKeys: ref(['6']),
-      openKeys: ref(['sub1', 'sub2']),
+      selectedKeys: ref(['1']),
+      openKeys: ref(['sub1', 'sub2', 'sub3']),
       url,
     }
 
