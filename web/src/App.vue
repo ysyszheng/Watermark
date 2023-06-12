@@ -1,7 +1,8 @@
 <template>
   <a-layout style="min-height: 100vh">
     <!-- <a-layout-sider v-model:collapsed="collapsed" collapsible> -->
-    <a-layout-sider>
+    <!-- <a-layout-sider> -->
+    <a-layout-sider :style="{ overflow: 'auto', height: '100vh', position: 'fixed', left: 0, top: 0, bottom: 0 }">
       <div class="logo">
         <span>版权隐私保护平台</span>
       </div>
@@ -45,7 +46,8 @@
         </a-menu-item>
       </a-menu>
     </a-layout-sider>
-    <a-layout>
+    <!-- <a-layout> -->
+    <a-layout :style="{ marginLeft: '200px' }">
       <a-layout-header style="background: #fff; padding: 0" />
       <a-layout-content style="margin: 0 16px">
         <a-breadcrumb style="margin: 16px 0">

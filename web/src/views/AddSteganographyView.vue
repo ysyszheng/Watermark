@@ -6,7 +6,9 @@
           @change="handleFileUpload">
         <div class="upload-container">
           <span v-if="!uploadedImageURL">
-            <div class="upload-text">点击上传图片</div>
+            <div class="upload-text">
+              点击上传图片, 仅支持png格式
+            </div>
           </span>
           <img :src="uploadedImageURL" v-else>
         </div>
@@ -16,7 +18,7 @@
       <div class="input-button-container">
         <a-input v-model:value="textInput" placeholder="请输入版权证明文字" class="input-field" />
         <a-button @click="SubmitImage" type="primary" class="button">文字隐写</a-button>
-        <a-button @click="DownloadImage" type="primary" class="button">
+        <a-button v-if="showSteganImg" @click="DownloadImage" type="primary" class="button">
           <template #icon>
             <DownloadOutlined />
           </template>
@@ -35,6 +37,7 @@
 <script>
 import axios from 'axios';
 import { defineComponent, ref, inject } from 'vue';
+import { notification } from 'ant-design-vue';
 import { DownloadOutlined, InboxOutlined, PlusOutlined } from '@ant-design/icons-vue';
 
 export default defineComponent({
@@ -72,15 +75,22 @@ export default defineComponent({
       this.$refs.fileInput.click();
     },
     SubmitImage() {
-      // 上传图片及要隐写的文字
-      // console.log(this.textInput)
-      // console.log(this.uploadedImageFile)
       var text = this.textInput;
-      if (text == '') {
-        alert("请输入要隐写的文字！");
+      var file = this.uploadedImageFile;
+      if (file == null) {
+        notification['error']({
+          message: 'Error',
+          description: '请上传图片！',
+        });
         return;
       }
-      var file = this.uploadedImageFile;
+      if (text == '' || text == null) {
+        notification['error']({
+          message: 'Error',
+          description: '请输入要隐写的版权文字！',
+        });
+        return;
+      }
       var formData = new FormData()
       console.log("uploadImage_stegan:")
 
