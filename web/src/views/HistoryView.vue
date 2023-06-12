@@ -27,8 +27,7 @@
 </template>
 
 <script>
-import axios from 'axios'
-import {ref, onMounted, watch, inject } from "vue";
+import { inject } from "vue";
 export default {
   setup() {
     const url = inject('$url');

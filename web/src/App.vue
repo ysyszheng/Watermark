@@ -8,6 +8,10 @@
       </div>
       <!-- <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline"> -->
       <a-menu v-model:openKeys="openKeys" theme="dark" mode="inline">
+        <a-menu-item key="6">
+          <user-outlined />
+          <span></span><RouterLink to="/">个人信息</RouterLink>
+        </a-menu-item>
         <a-menu-item key="1" v-if="isLogged">
           <history-outlined />
           <span></span><RouterLink to="/history">历史记录</RouterLink>
@@ -40,10 +44,6 @@
             <RouterLink to="/rmwm">去除水印</RouterLink>
           </a-menu-item>
         </a-sub-menu>
-        <a-menu-item key="6">
-          <user-outlined />
-          <span></span><RouterLink to="/">个人信息</RouterLink>
-        </a-menu-item>
       </a-menu>
     </a-layout-sider>
     <!-- <a-layout> -->
@@ -74,8 +74,7 @@ import {
   FileImageOutlined,
   FileProtectOutlined,
 } from '@ant-design/icons-vue';
-import { defineComponent, ref, onMounted, watch, inject } from "vue";
-import axios from "axios";
+import { defineComponent, ref, onMounted, inject } from "vue";
 import axiosInstance from './api/index.js'
 
 export default defineComponent ({
@@ -124,7 +123,8 @@ export default defineComponent ({
       username,
       isLogged,
       collapsed: ref(false),
-      selectedKeys: ref(['1']),
+      selectedKeys: ref(['6']),
+      openKeys: ref(['sub1', 'sub2']),
       url,
     }
 
