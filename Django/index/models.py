@@ -1,7 +1,8 @@
 from django.db import models
 from PIL import Image as ImageProcess
+import cv2
 from .process.stegan import encodeDataInImage, decodeImage
-from .process.watermark import addWatermark
+from .process.watermark import addWatermark, remover
 
 
 class User(models.Model):
@@ -31,6 +32,8 @@ class Image(models.Model):
     file_time = models.CharField(max_length=120, default="visitor.jpg")
     photo_input = models.ImageField(upload_to="", default="#", verbose_name="Image")
     photo_output = models.CharField(max_length=120, default="visitor_.jpg")
+
+    template = models.ImageField(upload_to="", default="#", verbose_name="Template")
 
     class Meta:
         db_table = "Image"
@@ -67,4 +70,15 @@ class Image(models.Model):
         file.save(f"media/watermark_{self.photo_input.__dict__['name']}")
         self.photo_output = f"watermark_{self.photo_input.__dict__['name']}"
         self.type = "watermark"
+        self.save()
+
+    
+    def unwatermark(self):
+        # filename = f"..\\media\\{self.photo_input.__dict__['name']}"
+        # template = f"..\\media\\{self.template.__dict__['name']}"
+        filename = self.photo_input.path
+        template = self.template.path
+        remover(filename, template, f"media/unwatermark_{self.photo_input.__dict__['name']}")
+        self.photo_output = f"unwatermark_{self.photo_input.__dict__['name']}"
+        self.type = "unwatermark"
         self.save()

@@ -14,7 +14,7 @@
         </div>
       </div>
       <div>
-        <a-button @click="SubmitImage" type="primary" class="button">去除水印</a-button>
+        <a-button @click="SubmitProcessedImage" type="primary" class="button">去除水印</a-button>
         <a-button v-if="showWatermarkImg" @click="DownloadImage" type="primary" class="button">
           <template #icon>
             <DownloadOutlined />
@@ -71,7 +71,7 @@ export default defineComponent({
       uploadedTemplateURL: null,
       uploadedTemplateFile: null,
       showWatermarkImg: false, // 控制是否显示去除水印后的图片
-      watermarkImg: '', // 去除水印后的图片
+      unwatermarkImg: '', // 去除水印后的图片
     };
   },
   methods: {
@@ -95,8 +95,7 @@ export default defineComponent({
     openTemplateUpload() {
       this.$refs.templateInput.click();
     },
-    SubmitImage() {
-      var text = this.textInput;
+    SubmitProcessedImage() {
       var file = this.uploadedImageFile;
       var template = this.uploadedTemplateFile;
       if (file == null) {
@@ -121,22 +120,23 @@ export default defineComponent({
 
       formData.append("jaccount", jaccount);
       formData.append("upload_file", file);
-      formData.append("text", text);
+      formData.append("template_file", template);
+
 
       axios
-        .post(that.url + "/index/watermark/", formData)
+        .post(that.url + "/index/unwatermark/", formData)
         .then(function (response) {
           // 处理返回的图片格式并展示
           console.log(response.data["key"]);
           if (response.data["key"] == 1) {
-            console.log("Watermark成功！");
-            console.log(response.data['watermark_photo'])
+            console.log("Unwatermark成功！");
+            console.log(response.data['unwatermark_photo'])
             that.showWatermarkImg = true;
-            that.watermarkImg = that.url + "/media/" + response.data['watermark_photo'];
-            sessionStorage.setItem("watermark_photo", response.data['watermark_photo']);
+            that.unwatermarkImg = that.url + "/media/" + response.data['unwatermark_photo'];
+            sessionStorage.setItem("unwatermark_photo", response.data['unwatermark_photo']);
           }
           if (response.data["key"] == 0) {
-            console.log("Watermark失败！");
+            console.log("Unwatermark失败！");
           }
         })
         .catch(function (error) {
@@ -145,11 +145,11 @@ export default defineComponent({
 
     },
     DownloadImage() {
-      var watermark_photo = sessionStorage.getItem("watermark_photo");
-      console.log("watermark_photo:");
-      console.log(watermark_photo);
+      var unwatermark_photo = sessionStorage.getItem("unwatermark_photo");
+      console.log("unwatermark_photo:");
+      console.log(unwatermark_photo);
       // 拼接完整的图片URL
-      var imageUrl = this.url + "/media/" + watermark_photo;
+      var imageUrl = this.url + "/media/" + unwatermark_photo;
 
       // 发送GET请求获取图片数据
       axios.get(imageUrl, { responseType: 'blob' })
@@ -160,7 +160,7 @@ export default defineComponent({
           // 创建一个隐藏的下载链接，并模拟点击下载
           var link = document.createElement('a');
           link.href = url;
-          link.setAttribute('download', watermark_photo);
+          link.setAttribute('download', unwatermark_photo);
           link.style.display = 'none';
           document.body.appendChild(link);
           link.click();

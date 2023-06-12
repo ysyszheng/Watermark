@@ -62,3 +62,22 @@ def uploadImage_watermark(request):
 
     res['watermark_photo'] = img.photo_output
     return HttpResponse(json.dumps(res), content_type="application/json")
+
+
+@csrf_exempt
+def uploadImage_unwatermark(request):
+    jaccount = request.POST.get('jaccount').strip()
+    print(jaccount)
+    res = {'key':1}
+    try:
+        file_img = request.FILES['upload_file']  # 获取文件对象（此处是已经含有隐写信息的图片）
+        template_img = request.FILES['template_file']
+        file_time = str(datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S')) 
+
+        user = User.objects.filter(jaccount=jaccount)[0]
+        img = Image.objects.create(user=user, username=jaccount, file_time=file_time, photo_input=file_img, template=template_img)
+        img.unwatermark()
+        res['unwatermark_photo'] = img.photo_output
+    except:
+        res['key'] = 0
+    return HttpResponse(json.dumps(res), content_type="application/json")

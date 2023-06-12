@@ -14,7 +14,7 @@ admin.site.register(User, UserManager)
 
 
 class ImageManager(admin.ModelAdmin):
-    list_display = ['id', 'user','username', 'text', 'file_time', 'type', 'photo_input', 'photo_output']
+    list_display = ['id', 'user','username', 'text', 'file_time', 'type', 'photo_input', 'photo_output', 'template']
     list_display_links = ['username']
     search_fields = ['username']
 
