@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'index',
     'rest_framework',
     'corsheaders',
+    'werkzeug_debugger_runserver',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [

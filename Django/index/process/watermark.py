@@ -136,6 +136,11 @@ class WatermarkRemover(object):
         mask = np.zeros(img.shape, np.uint8)
         # watermark_template_mask_img = cv2.cvtColor(watermark_template_gray_img, cv2.COLOR_GRAY2BGR)
         # mask[y1:y1 + self.watermark_template_h, x1:x1 + self.watermark_template_w] = watermark_template_mask_img
+
+        print(img.shape)
+        print(y1,y2,x1,x2)
+        print(watermark_template_mask_img.shape)
+
         mask[y1:y2, x1:x2] = watermark_template_mask_img
         mask = cv2.cvtColor(mask, cv2.COLOR_BGR2GRAY)
 

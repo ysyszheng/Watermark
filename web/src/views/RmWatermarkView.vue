@@ -39,7 +39,7 @@
     </a-col>
     <a-col :span="8">
       <div v-if="showWatermarkImg" class="watermark-container">
-        <a-image :src="watermarkImg" alt="watermarkImg" />
+        <a-image :src="unwatermarkImg" alt="watermarkImg" />
       </div>
     </a-col>
   </a-row>

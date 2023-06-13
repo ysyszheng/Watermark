@@ -78,7 +78,7 @@ class Image(models.Model):
         # template = f"..\\media\\{self.template.__dict__['name']}"
         filename = self.photo_input.path
         template = self.template.path
-        remover(filename, template, f"media/unwatermark_{self.photo_input.__dict__['name']}")
+        remover(template, filename,  f"media/unwatermark_{self.photo_input.__dict__['name']}")
         self.photo_output = f"unwatermark_{self.photo_input.__dict__['name']}"
         self.type = "unwatermark"
         self.save()

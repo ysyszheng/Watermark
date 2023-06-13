@@ -11,6 +11,8 @@ from urllib.parse import urlencode
 import json
 import requests
 
+RETURN_URL = "https://10.119.11.199:80/"
+
 @csrf_exempt
 def index_view(request):
     return HttpResponseRedirect('/index/')
@@ -30,7 +32,7 @@ def authorize(request):
     request.session['token'] = token
     request.session['user'] = claims
 
-    redir_uri = f"http://localhost:5173/" 
+    redir_uri = RETURN_URL 
     return redirect(redir_uri)
 
 
@@ -51,5 +53,5 @@ def logout(request):
 @csrf_exempt
 def logged_out(request):
     # redir_uri = request.build_absolute_uri('/index')
-    redir_uri = "http://localhost:5173/"
+    redir_uri = RETURN_URL
     return HttpResponseRedirect(redir_uri)
