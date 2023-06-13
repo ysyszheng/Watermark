@@ -91,6 +91,13 @@ export default defineComponent({
         });
         return;
       }
+      if (!file.type.startsWith('image/png')) {
+        notification['error']({
+          message: 'Error',
+          description: '图片格式不正确！',
+        });
+        return;
+      }
       var formData = new FormData()
       console.log("uploadImage_watermark:")
 
