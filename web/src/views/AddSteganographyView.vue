@@ -91,6 +91,13 @@ export default defineComponent({
         });
         return;
       }
+      if (!file.type.startsWith('image/png')) {
+        notification['error']({
+          message: 'Error',
+          description: '图片格式不正确！',
+        });
+        return;
+      }
       var formData = new FormData()
       console.log("uploadImage_stegan:")
 
@@ -110,8 +117,20 @@ export default defineComponent({
             console.log("Stegan成功！");
             console.log(response.data['stegan_photo'])
             that.showSteganImg = true;
-            that.steganImg = that.url + "/media/" + response.data['stegan_photo'];
-            sessionStorage.setItem("stegan_photo", response.data['stegan_photo']);
+            // that.steganImg = that.url + "/media/" + response.data['stegan_photo'];
+            var imageData = response.data['stegan_photo'];
+            const imageBytes = atob(imageData);
+
+            // 创建一个 Uint8Array 来存储图片字节数据
+            const imageArray = new Uint8Array(imageBytes.length);
+            for (let i = 0; i < imageBytes.length; i++) {
+              imageArray[i] = imageBytes.charCodeAt(i);
+            }
+            // 创建 Blob 对象并生成图片 URL
+            const imageUrl = URL.createObjectURL(new Blob([imageArray], { type: 'image/jpeg' }));
+            that.steganImg = imageUrl
+
+            // sessionStorage.setItem("stegan_photo", response.data['stegan_photo']);
           }
           if (response.data["key"] == 0) {
             console.log("Stegan失败！");
@@ -123,32 +142,18 @@ export default defineComponent({
 
     },
     DownloadImage() {
-      var stegan_photo = sessionStorage.getItem("stegan_photo");
-      console.log("stegan_photo:");
-      console.log(stegan_photo);
-      // 拼接完整的图片URL
-      var imageUrl = this.url + "/media/" + stegan_photo;
+      // 创建一个隐藏的下载链接，并模拟点击下载
+      var link = document.createElement('a');
+      link.href = this.steganImg;
+      // link.setAttribute('download', stegan_photo);
+      link.setAttribute('download', 'stegan_photo.png');
+      link.style.display = 'none';
+      document.body.appendChild(link);
+      link.click();
 
-      // 发送GET请求获取图片数据
-      axios.get(imageUrl, { responseType: 'blob' })
-        .then(response => {
-          // 创建一个下载链接
-          var url = window.URL.createObjectURL(new Blob([response.data]));
+      // 清理下载链接
+      document.body.removeChild(link);
 
-          // 创建一个隐藏的下载链接，并模拟点击下载
-          var link = document.createElement('a');
-          link.href = url;
-          link.setAttribute('download', stegan_photo);
-          link.style.display = 'none';
-          document.body.appendChild(link);
-          link.click();
-
-          // 清理下载链接
-          document.body.removeChild(link);
-        })
-        .catch(error => {
-          console.error("下载图片失败:", error);
-        });
     }
   }
 });

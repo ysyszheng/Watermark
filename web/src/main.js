@@ -14,7 +14,7 @@ import 'ant-design-vue/dist/antd.css';
 
 const app = createApp(App)
 
-app.provide('$url', 'https://10.119.11.199:443')
+app.provide('$url', 'https://10.119.11.199:80')
 app.use(router)
 app.use(Button)
 app.use(Input)

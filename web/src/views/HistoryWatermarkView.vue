@@ -56,6 +56,23 @@ export default {
     },
     getImageUrl(filename) {
       // 生成图片的URL
+      var imageData = filename;
+      console.log("imageData:")
+      console.log(imageData)
+      const imageBytes = atob(imageData);
+
+      // 创建一个 Uint8Array 来存储图片字节数据
+      const imageArray = new Uint8Array(imageBytes.length);
+      for (let i = 0; i < imageBytes.length; i++) {
+        imageArray[i] = imageBytes.charCodeAt(i);
+      }
+      // 创建 Blob 对象并生成图片 URL
+      const imageUrl = URL.createObjectURL(new Blob([imageArray], { type: 'image/jpeg' }));
+      console.log("OBJ URL:")
+      console.log(imageUrl)
+      return imageUrl
+      
+      // 生成图片的URL
       return this.url + "/media/" + filename
     }
   }

@@ -132,12 +132,24 @@ export default defineComponent({
             console.log("Unwatermark成功！");
             console.log(response.data['unwatermark_photo'])
             that.showWatermarkImg = true;
-            that.unwatermarkImg = that.url + "/media/" + response.data['unwatermark_photo'];
-            sessionStorage.setItem("unwatermark_photo", response.data['unwatermark_photo']);
+            
+            var imageData = response.data['unwatermark_photo'];
+            const imageBytes = atob(imageData);
+
+            // 创建一个 Uint8Array 来存储图片字节数据
+            const imageArray = new Uint8Array(imageBytes.length);
+            for (let i = 0; i < imageBytes.length; i++) {
+              imageArray[i] = imageBytes.charCodeAt(i);
+            }
+            // 创建 Blob 对象并生成图片 URL
+            const imageUrl = URL.createObjectURL(new Blob([imageArray], { type: 'image/jpeg' }));
+            that.unwatermarkImg = imageUrl
+
           }
           if (response.data["key"] == 0) {
             console.log("Unwatermark失败！");
           }
+
         })
         .catch(function (error) {
           console.log(error)
@@ -145,32 +157,17 @@ export default defineComponent({
 
     },
     DownloadImage() {
-      var unwatermark_photo = sessionStorage.getItem("unwatermark_photo");
-      console.log("unwatermark_photo:");
-      console.log(unwatermark_photo);
-      // 拼接完整的图片URL
-      var imageUrl = this.url + "/media/" + unwatermark_photo;
+      // 创建一个隐藏的下载链接，并模拟点击下载
+      var link = document.createElement('a');
+      link.href = this.unwatermarkImg;
+      link.setAttribute('download', "unwatermark_photo.png");
+      link.style.display = 'none';
+      document.body.appendChild(link);
+      link.click();
 
-      // 发送GET请求获取图片数据
-      axios.get(imageUrl, { responseType: 'blob' })
-        .then(response => {
-          // 创建一个下载链接
-          var url = window.URL.createObjectURL(new Blob([response.data]));
+      // 清理下载链接
+      document.body.removeChild(link);
 
-          // 创建一个隐藏的下载链接，并模拟点击下载
-          var link = document.createElement('a');
-          link.href = url;
-          link.setAttribute('download', unwatermark_photo);
-          link.style.display = 'none';
-          document.body.appendChild(link);
-          link.click();
-
-          // 清理下载链接
-          document.body.removeChild(link);
-        })
-        .catch(error => {
-          console.error("下载图片失败:", error);
-        });
     }
   },
 });

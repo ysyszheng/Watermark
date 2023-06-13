@@ -43,6 +43,14 @@ export default {
   mounted() {
     // 在页面加载时获取历史图片记录
     this.getHistoricalImages()
+    console.log("mounted")
+    var o = true
+    if (sessionStorage.getItem("jaccount") == "0000" | sessionStorage.getItem("jaccount") == null) {
+      o = false
+    }
+    setTimeout((o) => {
+      this.checkSessionStorage(o)
+    }, 500, o)
   },
   methods: {
     getHistoricalImages() {
@@ -51,12 +59,26 @@ export default {
       if (imageSet) {
         this.imageSet = JSON.parse(imageSet)
       }
-      console.log("imageSet: ")
-      console.log(imageSet)
+      // console.log("imageSet: ")
+      // console.log(imageSet)
     },
     getImageUrl(filename) {
       // 生成图片的URL
-      return this.url + "/media/" + filename
+      var imageData = filename;
+      console.log("imageData:")
+      console.log(imageData)
+      const imageBytes = atob(imageData);
+
+      // 创建一个 Uint8Array 来存储图片字节数据
+      const imageArray = new Uint8Array(imageBytes.length);
+      for (let i = 0; i < imageBytes.length; i++) {
+        imageArray[i] = imageBytes.charCodeAt(i);
+      }
+      // 创建 Blob 对象并生成图片 URL
+      const imageUrl = URL.createObjectURL(new Blob([imageArray], { type: 'image/jpeg' }));
+      console.log("OBJ URL:")
+      console.log(imageUrl)
+      return imageUrl
     }
   }
 }

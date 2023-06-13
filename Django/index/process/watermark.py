@@ -142,6 +142,8 @@ class WatermarkRemover(object):
         print(watermark_template_mask_img.shape)
 
         mask[y1:y2, x1:x2] = watermark_template_mask_img
+
+        
         mask = cv2.cvtColor(mask, cv2.COLOR_BGR2GRAY)
 
         # 用遮板进行图片修复，使用 TELEA 算法
@@ -173,7 +175,12 @@ class WatermarkRemover(object):
 
 def addWatermark(image,text):
     draw = ImageDraw.Draw(image)
-    draw.text((50,50),text)
+    font_size = int(image.size[1] / 10)
+    font = ImageFont.truetype(
+        "/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf", font_size
+    )
+    fill_color = (255, 255, 255, 128)
+    draw.text((50, 50), text, font=font, fill=fill_color)
     return image
 
 def remover(template_path, image_path, result_path):

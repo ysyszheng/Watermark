@@ -16,7 +16,7 @@ export default defineConfig({
   },
   server: {
     host: '0.0.0.0',
-    port: 80,
+    port: 443,
     // 是否开启 https
     https: {
       cert: fs.readFileSync(path.join(__dirname, 'src/ssl/cert.crt')),

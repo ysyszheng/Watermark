@@ -6,6 +6,7 @@ import json
 import os
 import datetime
 from pathlib import Path
+import base64
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 @csrf_exempt
@@ -22,7 +23,12 @@ def uploadImage_stegan(request):
     img = Image.objects.create(user=user, username=jaccount, file_time=file_time, photo_input=file_img, text=text)
     img.stegan(text)
 
-    res['stegan_photo'] = img.photo_output
+    # res['stegan_photo'] = img.photo_output
+    with open("/root/kyrie/kyrie/web/Watermark/Django/media/" + img.photo_output, 'rb') as g:
+        image_processed_data = g.read()
+
+    res['stegan_photo'] = base64.b64encode(image_processed_data).decode('utf-8')
+    
 
     # img.unstegan()
     return HttpResponse(json.dumps(res), content_type="application/json")
@@ -60,7 +66,10 @@ def uploadImage_watermark(request):
     img = Image.objects.create(user=user, username=jaccount, file_time=file_time, photo_input=file_img, text=text)
     img.watermark(text)
 
-    res['watermark_photo'] = img.photo_output
+    with open("/root/kyrie/kyrie/web/Watermark/Django/media/" + img.photo_output, 'rb') as g:
+        image_processed_data = g.read()
+
+    res['watermark_photo'] = base64.b64encode(image_processed_data).decode('utf-8')
     return HttpResponse(json.dumps(res), content_type="application/json")
 
 
@@ -77,7 +86,12 @@ def uploadImage_unwatermark(request):
         user = User.objects.filter(jaccount=jaccount)[0]
         img = Image.objects.create(user=user, username=jaccount, file_time=file_time, photo_input=file_img, template=template_img)
         img.unwatermark()
-        res['unwatermark_photo'] = img.photo_output
+        # res['unwatermark_photo'] = img.photo_output
+        with open("/root/kyrie/kyrie/web/Watermark/Django/media/" + img.photo_output, 'rb') as g:
+            image_processed_data = g.read()
+
+        res['unwatermark_photo'] = base64.b64encode(image_processed_data).decode('utf-8')
+
     except:
         res['key'] = 0
     return HttpResponse(json.dumps(res), content_type="application/json")

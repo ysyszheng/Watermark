@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from .models import User, Image
 from django.views.decorators.csrf import csrf_exempt
-
+import base64
 import requests
 import json
 # Create your views here.
@@ -41,13 +41,23 @@ def index_view(request):
             tmp = {"id": image.id, 'username': result}
             try:
                 tmp['text'] = image.text
-                tmp['photo_clean'] = image.photo_input.__dict__['name']
-                tmp['photo_processed'] = image.photo_output
+
+                with open(image.photo_input.path, 'rb') as f:
+                    image_data = f.read()
+                tmp['photo_clean'] = base64.b64encode(image_data).decode('utf-8')
+
+                with open("/root/kyrie/kyrie/web/Watermark/Django/media/" + image.photo_output, 'rb') as g:
+                    image_processed_data = g.read()
+
+                tmp['photo_processed'] = image_processed_data
+                tmp['photo_processed'] = base64.b64encode(image_processed_data).decode('utf-8')
+
                 tmp['file_time'] = image.file_time
+                
+                
             except:
                 continue
             image_set.append(tmp)
-
         # 返回水印图片
         images = Image.objects.filter(user=user, type="watermark")
         watermark_set = []
@@ -55,8 +65,19 @@ def index_view(request):
             tmp = {"id": image.id, 'username': result}
             try:
                 tmp['text'] = image.text
-                tmp['photo_clean'] = image.photo_input.__dict__['name']
-                tmp['photo_processed'] = image.photo_output
+
+                with open(image.photo_input.path, 'rb') as f:
+                    image_data = f.read()
+                tmp['photo_clean'] = base64.b64encode(image_data).decode('utf-8')
+
+                with open("/root/kyrie/kyrie/web/Watermark/Django/media/" + image.photo_output, 'rb') as g:
+                    image_processed_data = g.read()
+                    
+                tmp['photo_processed'] = image_processed_data
+                tmp['photo_processed'] = base64.b64encode(image_processed_data).decode('utf-8')
+                
+                # tmp['photo_clean'] = image.photo_input.__dict__['name']
+                # tmp['photo_processed'] = image.photo_output
                 tmp['file_time'] = image.file_time
             except:
                 continue
@@ -78,7 +99,8 @@ def index_view(request):
         'image_set': image_set,
         'watermark_set': watermark_set,
     }
-    print(image_set)
+
+    # print(image_set)
     return HttpResponse(json.dumps(id_info), content_type="application/json")
 
 

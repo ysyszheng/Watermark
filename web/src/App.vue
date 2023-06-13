@@ -97,6 +97,17 @@ export default defineComponent ({
     FileImageOutlined,
     FileProtectOutlined,
   },
+  mounted() {
+    console.log("mounted")
+    var o = true
+    if (sessionStorage.getItem("jaccount") == "0000" | sessionStorage.getItem("jaccount") == null) {
+      o = false
+    }
+    setTimeout((o) => {
+      this.checkSessionStorage(o)
+    }, 500, o)
+  },
+
   setup() {
     const url = inject('$url')
     const axios = axiosInstance
@@ -139,11 +150,20 @@ export default defineComponent ({
       openKeys: ref(['sub1', 'sub2', 'sub3']),
       url,
     }
-
-    onMounted(() => {
-      getid();
-    });
+    
   },
+  methods: {
+    checkSessionStorage(o) {
+      console.log("touchCSS")
+      var l = true
+      if (sessionStorage.getItem("jaccount") == "0000" | sessionStorage.getItem("jaccount") == null) {
+        l = false
+      }
+      if (l != o) {
+        window.location.reload()
+      }
+    }
+  }
 })
 
 </script>

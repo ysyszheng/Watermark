@@ -32,6 +32,18 @@
       </div>
     </a-col>
   </a-row>
+  <div>
+  <!--    <button @click="filenameerror = 1">上传图片</button>-->
+      <!-- 使用 v-if 指令，当 fileerror 为 1 时显示弹窗 -->
+      <div v-if="filenameerror === 1">
+        <div class="mask"></div>
+        <div class="dialog">
+          <h3>图片格式不正确</h3>
+          <p>请上传png格式的图片！</p>
+          <button @click="filenameerror = 0">确定</button>
+        </div>
+      </div>
+    </div>
 </template>
 
 <script>
@@ -91,6 +103,7 @@ export default defineComponent({
         });
         return;
       }
+
       var formData = new FormData()
       console.log("uploadImage_watermark:")
 
@@ -110,8 +123,19 @@ export default defineComponent({
             console.log("Watermark成功！");
             console.log(response.data['watermark_photo'])
             that.showWatermarkImg = true;
-            that.watermarkImg = that.url + "/media/" + response.data['watermark_photo'];
-            sessionStorage.setItem("watermark_photo", response.data['watermark_photo']);
+
+            var imageData = response.data['watermark_photo'];
+            const imageBytes = atob(imageData);
+
+            // 创建一个 Uint8Array 来存储图片字节数据
+            const imageArray = new Uint8Array(imageBytes.length);
+            for (let i = 0; i < imageBytes.length; i++) {
+              imageArray[i] = imageBytes.charCodeAt(i);
+            }
+            // 创建 Blob 对象并生成图片 URL
+            const imageUrl = URL.createObjectURL(new Blob([imageArray], { type: 'image/jpeg' }));
+            that.watermarkImg = imageUrl
+            // sessionStorage.setItem("watermark_photo", response.data['watermark_photo']);
           }
           if (response.data["key"] == 0) {
             console.log("Watermark失败！");
@@ -123,32 +147,17 @@ export default defineComponent({
 
     },
     DownloadImage() {
-      var watermark_photo = sessionStorage.getItem("watermark_photo");
-      console.log("watermark_photo:");
-      console.log(watermark_photo);
-      // 拼接完整的图片URL
-      var imageUrl = this.url + "/media/" + watermark_photo;
+      // 创建一个隐藏的下载链接，并模拟点击下载
+      var link = document.createElement('a');
+      link.href = this.watermarkImg;
+      link.setAttribute('download', "watermark_photo.png");
+      link.style.display = 'none';
+      document.body.appendChild(link);
+      link.click();
 
-      // 发送GET请求获取图片数据
-      axios.get(imageUrl, { responseType: 'blob' })
-        .then(response => {
-          // 创建一个下载链接
-          var url = window.URL.createObjectURL(new Blob([response.data]));
+      // 清理下载链接
+      document.body.removeChild(link);
 
-          // 创建一个隐藏的下载链接，并模拟点击下载
-          var link = document.createElement('a');
-          link.href = url;
-          link.setAttribute('download', watermark_photo);
-          link.style.display = 'none';
-          document.body.appendChild(link);
-          link.click();
-
-          // 清理下载链接
-          document.body.removeChild(link);
-        })
-        .catch(error => {
-          console.error("下载图片失败:", error);
-        });
     }
   },
 });
@@ -223,4 +232,28 @@ export default defineComponent({
   /* 添加上方间距 */
   margin-right: 20px;
   /* 添加右侧间距 */
-}</style>
+
+}
+
+/* 遮罩层样式 */
+.mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* 弹窗样式 */
+.dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  text-align: center;
+}
+</style>
