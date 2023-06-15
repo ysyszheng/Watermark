@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="isLogged">
     <a-alert message="左侧为原图, 右侧为添加版权水印后的图片, 点击图片可以放大预览" type="info" />
     <div v-for="image in imageSet" :key="image.id">
       <div>
@@ -24,14 +24,27 @@
       </a-row>
     </div>
   </div>
+  
+  <div v-if="!isLogged" class="jaccount" @click="mainpage">
+    <br />
+    <p>您尚未登录。请登录！</p>
+    <img src="https://i.sjtu.edu.cn/css/assets/images/jaccount.png" alt="jAccount"/>
+    <br />
+  </div>
 </template>
 
 <script>
-import { inject } from "vue";
+import { ref, inject } from "vue";
 export default {
   setup() {
     const url = inject('$url');
+    const isLogged = ref(false);
+    if (sessionStorage.getItem("jaccount") == "0000" | sessionStorage.getItem("jaccount") == null) isLogged.value = false
+    else {
+      isLogged.value = true
+    }
     return{
+      isLogged,
       url
     }
   },
@@ -53,6 +66,9 @@ export default {
       }
       console.log("imageSet: ")
       console.log(imageSet)
+    },
+    mainpage() {
+      window.location.href = this.url + '/login/';
     },
     getImageUrl(filename) {
       // 生成图片的URL

@@ -33,6 +33,7 @@ export default {
       url,
     }
   },
+
   methods:{
     login() {
       window.location.href = this.url + '/login/';

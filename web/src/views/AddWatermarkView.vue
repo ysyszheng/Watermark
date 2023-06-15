@@ -1,7 +1,8 @@
 <template>
   <a-row>
     <a-col :span="8">
-      <div class="upload-box" @click="openFileUpload">
+      <div v-if="isLogged" class="upload-box" @click="openFileUpload">
+<!--      <div  class="upload-box" @click="openFileUpload">-->
         <input type="file" accept="image/*" ref="fileInput" style="display: none;" id="upload_img"
           @change="handleFileUpload">
         <div class="upload-container">
@@ -15,7 +16,8 @@
       </div>
     </a-col>
     <a-col :span="8">
-      <div class="input-button-container">
+      <div v-if="isLogged" class="input-button-container">
+<!--      <div class="input-button-container">-->
         <a-input v-model:value="textInput" placeholder="请输入水印版权文字" class="input-field" />
         <a-button @click="SubmitImage" type="primary" class="button">添加水印</a-button>
         <a-button v-if="showWatermarkImg" @click="DownloadImage" type="primary" class="button">
@@ -32,6 +34,12 @@
       </div>
     </a-col>
   </a-row>
+  <div v-if="!isLogged" class="jaccount" @click="mainpage">
+    <br />
+    <p>您尚未登录。请登录！</p>
+    <img src="https://i.sjtu.edu.cn/css/assets/images/jaccount.png" alt="jAccount"/>
+    <br />
+  </div>
 </template>
 
 <script>
@@ -39,6 +47,7 @@ import axios from 'axios';
 import { defineComponent, ref, inject } from 'vue';
 import { notification } from 'ant-design-vue';
 import { DownloadOutlined, InboxOutlined, PlusOutlined } from '@ant-design/icons-vue';
+
 
 export default defineComponent({
   components: {
@@ -49,7 +58,13 @@ export default defineComponent({
   setup() {
     const textInput = ref('');
     const url = inject('$url');
+    const isLogged = ref(false);
+    if (sessionStorage.getItem("jaccount") == "0000" | sessionStorage.getItem("jaccount") == null) isLogged.value = false
+    else {
+      isLogged.value = true
+    }
     return {
+      isLogged,
       textInput,
       size: ref('large'),
       url,
@@ -63,7 +78,13 @@ export default defineComponent({
       watermarkImg: '', // 隐写后的图片
     };
   },
+
+
+
   methods: {
+    mainpage() {
+      window.location.href = this.url + '/login/';
+    },
     handleFileUpload(event) {
       const file = event.target.files[0];
       if (file) {
