@@ -53,6 +53,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 日志记录
+    'index.middleware.NetworkTrafficLoggerMiddleware',
 ]
 
 ROOT_URLCONF = 'Django.urls'
@@ -142,3 +144,23 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'network_traffic': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': '/root/kyrie/kyrie/web/Watermark/Django/Django/log/network_traffic.log',  # 设置日志文件路径
+        },
+    },
+    'loggers': {
+        'network_traffic': {
+            'handlers': ['network_traffic'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}

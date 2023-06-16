@@ -1,7 +1,7 @@
 <template>
   <a-row>
     <a-col :span="8">
-      <div class="upload-box" @click="openFileUpload">
+      <div v-if="isLogged" class="upload-box" @click="openFileUpload">
         <input type="file" accept="image/*" ref="fileInput" style="display: none;" id="upload_img"
           @change="handleFileUpload">
         <div class="upload-container">
@@ -14,7 +14,7 @@
         </div>
       </div>
       <div>
-        <a-button @click="SubmitProcessedImage" type="primary" class="button">去除水印</a-button>
+        <a-button v-if="isLogged" @click="SubmitProcessedImage" type="primary" class="button">去除水印</a-button>
         <a-button v-if="showWatermarkImg" @click="DownloadImage" type="primary" class="button">
           <template #icon>
             <DownloadOutlined />
@@ -24,7 +24,7 @@
       </div>
     </a-col>
     <a-col :span="8">
-      <div class="upload-box" @click="openTemplateUpload">
+      <div v-if="isLogged" class="upload-box" @click="openTemplateUpload">
         <input type="file" accept="image/*" ref="templateInput" style="display: none;" id="upload_img"
           @change="handleTemplateUpload">
         <div class="upload-container">
@@ -43,6 +43,12 @@
       </div>
     </a-col>
   </a-row>
+  <div v-if="!isLogged" class="jaccount" @click="mainpage">
+    <br />
+    <p>您尚未登录。请登录！</p>
+    <img src="https://i.sjtu.edu.cn/css/assets/images/jaccount.png" alt="jAccount"/>
+    <br />
+  </div>
 </template>
 
 <script>
@@ -59,9 +65,15 @@ export default defineComponent({
   },
   setup() {
     const url = inject('$url');
+    const isLogged = ref(false);
+    if (sessionStorage.getItem("jaccount") == "0000" | sessionStorage.getItem("jaccount") == null) isLogged.value = false
+    else {
+      isLogged.value = true
+    }
     return {
       size: ref('large'),
       url,
+      isLogged,
     };
   },
   data() {
@@ -81,6 +93,9 @@ export default defineComponent({
         this.uploadedImageURL = URL.createObjectURL(file);
         this.uploadedImageFile = file;
       }
+    },
+    mainpage() {
+      window.location.href = this.url + '/login/';
     },
     handleTemplateUpload(event) {
       const file = event.target.files[0];

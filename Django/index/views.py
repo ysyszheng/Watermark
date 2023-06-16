@@ -5,6 +5,9 @@ from django.views.decorators.csrf import csrf_exempt
 import base64
 import requests
 import json
+import time
+import logging
+logger = logging.getLogger('network_traffic')
 # Create your views here.
 @csrf_exempt
 def index_view(request):
@@ -99,6 +102,12 @@ def index_view(request):
         'image_set': image_set,
         'watermark_set': watermark_set,
     }
+
+    current_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
+    log_message = f"{current_time} - IP: {request.META['REMOTE_ADDR']}, Method: {request.method}, " \
+                f"Path: {request.path}, Jaccount Name: {result}"
+    logger.info(log_message)
+
 
     # print(image_set)
     return HttpResponse(json.dumps(id_info), content_type="application/json")

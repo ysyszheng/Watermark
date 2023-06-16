@@ -1,7 +1,7 @@
 <template>
   <a-row>
     <a-col :span="8">
-      <div class="upload-box" @click="openFileUpload">
+      <div v-if="isLogged" class="upload-box" @click="openFileUpload">
         <input type="file" accept="image/*" ref="fileInput" style="display: none;" id="upload_img"
           @change="handleFileUpload">
         <div class="upload-container">
@@ -15,7 +15,7 @@
       </div>
     </a-col>
     <a-col :span="8">
-      <div class="input-button-container">
+      <div v-if="isLogged" class="input-button-container">
         <a-input v-model:value="textInput" placeholder="请输入版权证明文字" class="input-field" />
         <a-button @click="SubmitImage" type="primary" class="button">文字隐写</a-button>
         <a-button v-if="showSteganImg" @click="DownloadImage" type="primary" class="button">
@@ -32,6 +32,12 @@
       </div>
     </a-col>
   </a-row>
+  <div v-if="!isLogged" class="jaccount" @click="mainpage">
+    <br />
+    <p>您尚未登录。请登录！</p>
+    <img src="https://i.sjtu.edu.cn/css/assets/images/jaccount.png" alt="jAccount"/>
+    <br />
+  </div>
 </template>
 
 <script>
@@ -49,10 +55,16 @@ export default defineComponent({
   setup() {
     const textInput = ref('');
     const url = inject('$url');
+    const isLogged = ref(false);
+    if (sessionStorage.getItem("jaccount") == "0000" | sessionStorage.getItem("jaccount") == null) isLogged.value = false
+    else {
+      isLogged.value = true
+    }
     return {
       textInput,
       size: ref('large'),
       url,
+      isLogged,
     };
   },
   data() {
@@ -70,6 +82,9 @@ export default defineComponent({
         this.uploadedImageURL = URL.createObjectURL(file);
         this.uploadedImageFile = file;
       }
+    },
+    mainpage() {
+      window.location.href = this.url + '/login/';
     },
     openFileUpload() {
       this.$refs.fileInput.click();
