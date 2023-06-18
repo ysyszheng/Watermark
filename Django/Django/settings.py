@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-kyp4yv)rnz4vrv1d=te(d!)j3t5ay7b6t$x+-say)sm!9t_rz_'
+SECRET_KEY = YOUR_SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -130,13 +130,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
-# STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
-JACCOUNT_CLIENT_ID = 'ZjpxY3dA6fpkp7o4kM0g'
-# JACCOUNT_CLIENT_ID = os.environ.get('JACCOUNT_CLIENT_ID', '')
-
-JACCOUNT_CLIENT_SECRET = 'CE1FEABAD368510B161F8F0E582CBA6864EAF4137FC18079'
-# JACCOUNT_CLIENT_SECRET = os.environ.get('JACCOUNT_CLIENT_SECRET', '')
+# 如果要运行，此处需要填写你申请的Jaccount API的ID和Secret
+JACCOUNT_CLIENT_ID = os.environ.get('JACCOUNT_CLIENT_ID', '')
+JACCOUNT_CLIENT_SECRET = os.environ.get('JACCOUNT_CLIENT_SECRET', '')
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
@@ -153,7 +150,7 @@ LOGGING = {
         'network_traffic': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
-            'filename': '/root/kyrie/kyrie/web/Watermark/Django/Django/log/network_traffic.log',  # 设置日志文件路径
+            'filename': '/root/network_traffic.log',  # 设置日志文件路径
         },
     },
     'loggers': {
